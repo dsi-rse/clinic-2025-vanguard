@@ -24,13 +24,13 @@ execute:
   freeze: auto
 ---
 
-## Before surgery, chemotherapy is a high-stakes test
+## Neoadjuvant Therapy is given before surgery, and can shrink a tumor.
 
 ::: {.motivation-grid}
 ::: {.story-card}
 <div class="card-kicker">THE TREATMENT</div>
 <div class="card-icon">Before surgery</div>
-<p>Chemotherapy can shrink a tumor and reveal how it responds.</p>
+<p>Neoadjuvant chemotherapy can shrink a tumor and is associated with better outcomes.</p>
 :::
 
 ::: {.story-card .feature-card}
@@ -42,19 +42,19 @@ execute:
 ::: {.story-card}
 <div class="card-kicker">THE QUESTION</div>
 <div class="card-icon">Can MRI help?</div>
-<p>Could an existing scan give us an earlier clue about treatment response?</p>
+<p>How much signal is there in vessel networks and contrast flow?</p>
 :::
 :::
 
-<div class="plain-callout">The long-term goal is better evidence for tailoring treatment, not replacing clinical judgment.</div>
+<div class="plain-callout">The long-term goal is better evidence for tailoring treatment.</div>
 
 ::: {.notes}
 Many patients with breast cancer receive chemotherapy before surgery. A pathologic
 complete response means no invasive cancer remains at surgery; in our dataset,
 about one third of patients achieved a complete response. Chemotherapy is demanding,
 so the motivation is simple: can information already present in an MRI give us an
-earlier clue? This is research toward decision support, not a clinical tool or a
-replacement for physicians.
+earlier clue? This is research toward decision support. It isn't a clinical tool
+or a replacement for physicians.
 :::
 
 ## Tumors build a messier blood supply
@@ -71,11 +71,11 @@ Blood flows through a predictable, well-structured network.
 ::: {.result-card .caution}
 <strong>Tumor vessels: dense, tortuous, leaky.</strong>
 
-Structure may reflect how aggressive a tumor is.
+Tumors take a lot of blood to keep growing. Structure may reflect how aggressive a tumor is.
 :::
 :::
 
-<div class="plain-callout">If that structure tracks tumor biology, it might help predict response. That's the biological reason to expect a vessel-based signal, not just a modeling choice.</div>
+<div class="plain-callout">If that structure tracks tumor biology, it might help predict response. That's the biological reason to expect a vessel-based signal. It isn't just a modeling choice.</div>
 
 ::: {.notes}
 Tumors don't just sit passively. They recruit their own blood supply to keep growing, and
