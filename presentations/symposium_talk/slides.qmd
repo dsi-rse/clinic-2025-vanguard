@@ -111,13 +111,9 @@ much larger pool of 1,226 exams with no treatment label at all, which we can
 still learn from without ever touching the answer we're trying to predict.
 :::
 
-## Two ingredients, one controlled comparison
+## Does the graph structure help? How about pretraining?
 
-<div class="lead-line">Does <strong>connecting the vessel map</strong> help? Does <strong>rehearsing the future</strong> help?</div>
-
-![](figures/arch5.svg){.nostretch width="58%" fig-align="center"}
-
-<div class="question-banner">Encoder pretrained on 1,226 unlabeled exams, then fine-tuned with and without connections, from pretrained or random weights.</div>
+![](figures/arch5.svg){.nostretch width="100%" fig-align="center"}
 
 ::: {.notes}
 We ran a controlled two-by-two comparison. One factor is the model itself: a graph
