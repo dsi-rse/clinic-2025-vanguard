@@ -102,21 +102,18 @@ $body-bg: #ffffff;
 }
 
 .motivation-grid,
-.lesson-grid,
 .remember-grid,
-.result-grid,
-.next-grid {
+.result-grid {
   display: grid;
   gap: 24px;
 }
 
 .motivation-grid {
   grid-template-columns: repeat(3, 1fr);
-  margin-top: 44px;
+  margin-top: 30px;
 }
 
 .story-card,
-.lesson-card,
 .remember-card,
 .result-card {
   background: var(--soft);
@@ -127,7 +124,7 @@ $body-bg: #ffffff;
 
 .story-card {
   border-top: 7px solid #9b9b9b;
-  min-height: 265px;
+  min-height: 225px;
 }
 
 .story-card.feature-card {
@@ -206,143 +203,10 @@ $body-bg: #ffffff;
   margin-top: 8px;
 }
 
-.map-question {
-  align-items: center;
-  display: grid;
-  gap: 25px;
-  grid-template-columns: 1fr 90px 1fr;
-  margin: 4px 40px 0;
-}
-
-.network-panel,
-.summary-panel,
-.ablation-panel {
-  background: var(--soft);
-  border: 2px solid #dedbd6;
-  border-radius: 20px;
-  box-sizing: border-box;
-  padding: 18px 24px;
-  text-align: center;
-}
-
-.network-panel svg {
-  height: 260px;
-  width: 100%;
-}
-
-.edges line {
-  stroke: var(--maroon);
-  stroke-linecap: round;
-  stroke-width: 10;
-}
-
-.nodes circle {
-  fill: #f0c76b;
-  stroke: var(--maroon-dark);
-  stroke-width: 6;
-}
-
-.network-caption {
-  font-size: 0.72em;
-  line-height: 1.25;
-}
-
-.versus {
-  color: var(--muted);
-  font-size: 0.72em;
-  font-weight: 900;
-  text-align: center;
-}
-
-.summary-panel {
-  min-height: 350px;
-  padding-top: 45px;
-}
-
-.summary-stack {
-  margin: 0 auto 30px;
-  max-width: 320px;
-}
-
-.summary-stack span {
-  background: #fff;
-  border: 3px solid var(--maroon);
-  border-radius: 10px;
-  box-shadow: 8px 8px 0 var(--maroon-light);
-  color: var(--maroon-dark);
-  display: block;
-  font-size: 0.82em;
-  font-weight: 800;
-  margin: 10px;
-  padding: 8px;
-}
-
 .question-banner {
   font-size: 0.9em;
   margin: 20px 95px 0;
   text-align: center;
-}
-
-.score-explainer {
-  color: var(--muted);
-  font-size: 0.75em;
-  margin-bottom: 18px;
-  text-align: center;
-}
-
-.score-chart {
-  margin: 0 auto;
-  max-width: 1040px;
-}
-
-.score-axis {
-  color: var(--muted);
-  display: flex;
-  font-size: 0.58em;
-  justify-content: space-between;
-  margin-left: 330px;
-  padding-right: 85px;
-}
-
-.score-row {
-  align-items: center;
-  display: grid;
-  gap: 18px;
-  grid-template-columns: 310px 1fr 70px;
-  margin: 18px 0;
-}
-
-.score-label {
-  font-size: 0.76em;
-  font-weight: 700;
-  text-align: right;
-}
-
-.score-track {
-  background: repeating-linear-gradient(90deg, #e6e3df 0 2px, transparent 2px 50%);
-  border: 2px solid #d6d1ca;
-  border-radius: 999px;
-  height: 48px;
-  overflow: hidden;
-}
-
-.score-bar {
-  border-radius: 999px;
-  height: 100%;
-}
-
-.score-bar.simple {
-  background: var(--gray);
-}
-
-.score-bar.gnn {
-  background: var(--maroon);
-}
-
-.score-value {
-  color: var(--maroon-dark);
-  font-size: 1.05em;
-  font-weight: 900;
 }
 
 .result-grid {
@@ -364,185 +228,9 @@ $body-bg: #ffffff;
   margin: 9px 0 0;
 }
 
-.ablation-wrap {
-  align-items: center;
-  display: grid;
-  gap: 26px;
-  grid-template-columns: 1fr 180px 1fr;
-  margin: 0 55px;
-}
-
-.ablation-panel {
-  padding: 16px 24px 18px;
-}
-
-.ablation-panel svg {
-  height: 220px;
-  width: 100%;
-}
-
-.mini-title {
-  color: var(--maroon-dark);
-  font-size: 0.75em;
-  font-weight: 800;
-}
-
-.ablation-score {
-  color: var(--maroon);
-  font-size: 1.35em;
-  font-weight: 900;
-}
-
-.ablation-panel.dropped {
-  background: #f7f7f7;
-}
-
-.delete-arrow {
-  color: var(--muted);
-  font-size: 0.62em;
-  text-align: center;
-}
-
-.delete-arrow strong {
-  color: var(--maroon);
-  display: block;
-  font-size: 2.7em;
-  line-height: 0.8;
-}
-
 .takeaway-banner {
   margin: 20px 120px 0;
   text-align: center;
-}
-
-.lesson-grid {
-  grid-template-columns: repeat(3, 1fr);
-  margin: 45px 20px 0;
-}
-
-.lesson-card {
-  border-top: 7px solid var(--maroon);
-  min-height: 250px;
-}
-
-.lesson-number {
-  align-items: center;
-  background: var(--maroon);
-  border-radius: 50%;
-  color: #fff;
-  display: flex;
-  font-size: 0.8em;
-  font-weight: 900;
-  height: 48px;
-  justify-content: center;
-  margin-bottom: 18px;
-  width: 48px;
-}
-
-.lesson-card strong {
-  font-size: 0.9em;
-}
-
-.lesson-card p {
-  font-size: 0.72em;
-}
-
-.planned-badge {
-  color: var(--maroon);
-  font-size: 0.56em;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  margin: -12px 0 15px;
-  text-align: center;
-}
-
-.movie-strip {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  margin: 2px 0 26px;
-}
-
-.movie-frame {
-  background: linear-gradient(145deg, #3b3b3b, #111);
-  border: 5px solid #fff;
-  box-shadow: 0 0 0 2px #cfcac4;
-  height: 155px;
-  margin: 0 8px;
-  overflow: hidden;
-  position: relative;
-  width: 150px;
-}
-
-.movie-frame span {
-  background: rgba(255,255,255,0.85);
-  border-radius: 0 0 6px 0;
-  color: var(--ink);
-  font-size: 0.48em;
-  left: 0;
-  padding: 2px 8px;
-  position: absolute;
-  top: 0;
-}
-
-.pulse {
-  background: radial-gradient(circle, #f4df8c 0 15%, #b44747 16% 31%, transparent 33%);
-  border-radius: 50%;
-  display: block;
-  height: 120px;
-  left: 15px;
-  position: absolute;
-  top: 18px;
-  width: 120px;
-}
-
-.pulse.p1 { opacity: 0.34; transform: scale(0.55); }
-.pulse.p2 { opacity: 0.65; transform: scale(0.78); }
-.pulse.p3 { opacity: 0.95; transform: scale(1); }
-
-.movie-arrow {
-  color: var(--maroon);
-  font-size: 0.65em;
-  font-weight: 900;
-  margin: 0 14px;
-}
-
-.movie-frame.future {
-  align-items: center;
-  background: repeating-linear-gradient(135deg, #f5f2ee 0 12px, #ebe6e0 12px 24px);
-  display: flex;
-  justify-content: center;
-}
-
-.movie-frame.future strong {
-  color: var(--maroon);
-  font-size: 2.3em;
-}
-
-.next-grid {
-  grid-template-columns: repeat(3, 1fr);
-  margin: 0 20px;
-}
-
-.next-grid > div {
-  border-left: 6px solid var(--maroon);
-  padding: 2px 20px;
-}
-
-.next-grid strong,
-.next-grid span {
-  display: block;
-}
-
-.next-grid strong {
-  font-size: 0.76em;
-}
-
-.next-grid span {
-  color: var(--muted);
-  font-size: 0.62em;
-  line-height: 1.2;
-  margin-top: 6px;
 }
 
 .remember-grid {
@@ -676,12 +364,26 @@ html.print-pdf .reveal .slides section {
   padding: 34px 54px var(--deck-bottom-safe) !important;
 }
 
+// The gradient is set directly on #title-slide (not just the .pdf-page
+// wrapper below) because :has() is unsupported in the Chromium 91 that
+// Quarto's bundled `quarto tools install chromium` ships -- without this,
+// #title-slide's white text renders invisible on a white page in that PDF
+// export path, even though it looks fine in any modern browser.
 html.print-pdf .reveal .slides #title-slide {
-  background: transparent !important;
+  background:
+    radial-gradient(circle at 84% 22%, rgba(255,255,255,0.16) 0 8px, transparent 9px),
+    radial-gradient(circle at 74% 38%, rgba(255,255,255,0.12) 0 12px, transparent 13px),
+    radial-gradient(circle at 90% 54%, rgba(255,255,255,0.10) 0 16px, transparent 17px),
+    linear-gradient(135deg, #4d0000 0%, #800000 62%, #9b1b30 100%) !important;
   padding: 120px 95px 100px !important;
 }
 
-html.print-pdf .pdf-page:has(#title-slide) {
+// :has() version for browsers that support it, plus a :first-of-type
+// fallback for Chromium 91 (the title slide is always the first printed
+// page) so the gradient still covers the full .pdf-page box, not just the
+// #title-slide section within it.
+html.print-pdf .pdf-page:has(#title-slide),
+html.print-pdf .pdf-page:first-of-type {
   background:
     radial-gradient(circle at 84% 22%, rgba(255,255,255,0.16) 0 8px, transparent 9px),
     radial-gradient(circle at 74% 38%, rgba(255,255,255,0.12) 0 12px, transparent 13px),

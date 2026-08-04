@@ -15,11 +15,11 @@ launcher currently points to a missing YAML resource; the existing local Quarto
 Speaker notes are embedded in `slides.qmd` and available in reveal.js presenter view.
 The talk is written for approximately five minutes, including the title slide.
 
-The central reported comparisons are:
+The central reported comparisons, matching the final `symposium_poster`, are:
 
-- Simple seven-feature vessel averages: pooled out-of-fold AUC 0.614.
-- Baseline voxel GNN: pooled out-of-fold AUC 0.616.
-- GNN with all edges removed: pooled out-of-fold AUC 0.618.
-- Protocol-audit bracket for the vessel signal: approximately 0.539–0.613.
+- Paired pretraining ΔAUC for the voxel GNN: +0.149 [+0.046, +0.255].
+- Paired pretraining ΔAUC for the graph-free (simple-summary) model: +0.034 [−0.049, +0.120] (95% CI crosses zero).
+- Pretrained GNN vs. pretrained graph-free: +0.079 [+0.010, +0.155].
+- Acquisition-timing-only model (frame count, duration, cadence; no imaging): AUC 0.587, vs. the pretrained GNN's 0.583 (Pearson r = 0.50 between their predictions).
 
-The self-supervised forecasting slide is explicitly labeled as planned work, not a result.
+The forecast-pretraining comparison is a completed result, not planned work.
