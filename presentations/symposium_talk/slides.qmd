@@ -1,6 +1,6 @@
 ---
 title: "Can Breast MRI Help Predict Treatment Response?"
-subtitle: "Forecasting pretraining made the vessel map matter, but timing complicates the story"
+subtitle: "Forecasting pretraining made the vessel networks matter, but timing created batch effects"
 author: "Spencer Venancio<br><span class='title-team'>with Sarit Bose and Aakrithi Ram · Advisor: Anna Woodard, PhD</span>"
 format:
   revealjs:
