@@ -116,7 +116,7 @@ frames per movie. That gives us both vessel shape and change over time.
 
 <div class="lead-line">Does <strong>connecting the vessel map</strong> help? Does <strong>rehearsing the future</strong> help?</div>
 
-![](figures/arch4.svg){.nostretch width="36%" fig-align="center"}
+![](figures/arch5.svg){.nostretch width="58%" fig-align="center"}
 
 <div class="question-banner">Encoder pretrained on 1,226 unlabeled exams, then fine-tuned with and without connections, from pretrained or random weights.</div>
 
