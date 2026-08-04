@@ -92,24 +92,29 @@ reason we expected vessel structure and dynamics to carry a treatment-response s
 beyond just trying a fancier model.
 :::
 
-## An MRI "movie" shows more than anatomy
+## Ultrafast MRI movie shows more than anatomy
 
 <div class="lead-line">After contrast is injected, repeated MRI frames reveal <strong>how it appears through the breast's vessels over time.</strong></div>
 
-![](figures/method_pipeline.svg){.nostretch width="90%" fig-align="center"}
+![](figures/movie_curves.svg){.nostretch width="62%" fig-align="center"}
 
 ::: {.three-facts}
-<div><strong>179</strong><span>analyzed exams</span></div>
-<div><strong>141</strong><span>patients</span></div>
-<div><strong>13–24</strong><span>frames per MRI movie</span></div>
+<div><strong>179</strong><span>labeled exams, 141 patients</span></div>
+<div><strong>1,226</strong><span>unlabeled exams, pretraining only</span></div>
+<div><strong>13–24</strong><span>frames per ultrafast movie</span></div>
 :::
 
 ::: {.notes}
 These scans are closer to a short movie than a still picture. A contrast agent
-enters the blood, and the scanner repeatedly records where it appears. We isolate
-the vessels, reduce them to centerlines, and turn the branching structure into data
-a model can read. The study included 179 exams from 141 patients, with 13 to 24
-frames per movie. That gives us both vessel shape and change over time.
+enters the blood, and the scanner repeatedly records where it appears at one
+point in the vessel network, over and over. Those are two real curves, same
+kind of signal, same relative-enhancement scale: Duke's standard protocol,
+public reference data, takes five snapshots spread across about ten minutes;
+UChicago's ultrafast protocol takes twenty-four frames in about two minutes,
+so we watch the wash-in happen instead of connecting a few dots across it. We
+have 179 labeled exams from 141 patients to predict response with, plus a
+much larger pool of 1,226 exams with no treatment label at all, which we can
+still learn from without ever touching the answer we're trying to predict.
 :::
 
 ## Two ingredients, one controlled comparison
