@@ -75,7 +75,7 @@ Tumors take a lot of blood to keep growing. Structure may reflect how aggressive
 :::
 :::
 
-<div class="plain-callout">If that structure tracks tumor biology, it might help predict response. That's the biological reason to expect a vessel-based signal.</div>
+<div class="plain-callout">If the blood vessel structure aligns with tumor behavior, it might help predict response. That's the biological reason to expect a vessel-based signal.</div>
 
 ::: {.notes}
 Tumors don't just sit passively. They recruit their own blood supply to keep growing, and
