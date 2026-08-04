@@ -61,27 +61,21 @@ replacement for physicians.
 
 <div class="lead-line">New vessels don't look or behave like normal ones.</div>
 
-::: {.motivation-grid}
-::: {.story-card}
-<div class="card-kicker">NORMAL VESSELS</div>
-<div class="card-icon">Organized, efficient</div>
-<p>Blood flows through a predictable, well-structured network.</p>
+::: {.result-grid}
+::: {.result-card}
+<strong>Normal vessels: organized, efficient.</strong>
+
+Blood flows through a predictable, well-structured network.
 :::
 
-::: {.story-card .feature-card}
-<div class="card-kicker">TUMOR VESSELS</div>
-<div class="card-icon">Dense, tortuous, leaky</div>
-<p>Structure may reflect how aggressive a tumor is.</p>
-:::
+::: {.result-card .caution}
+<strong>Tumor vessels: dense, tortuous, leaky.</strong>
 
-::: {.story-card}
-<div class="card-kicker">OUR IDEA</div>
-<div class="card-icon">Read the vessels</div>
-<p>If that structure tracks tumor biology, it might help predict response.</p>
+Structure may reflect how aggressive a tumor is.
 :::
 :::
 
-<div class="plain-callout">That's the biological reason to expect a vessel-based signal, not just a modeling choice.</div>
+<div class="plain-callout">If that structure tracks tumor biology, it might help predict response. That's the biological reason to expect a vessel-based signal, not just a modeling choice.</div>
 
 ::: {.notes}
 Tumors don't just sit passively. They recruit their own blood supply to keep growing, and
@@ -94,9 +88,9 @@ beyond just trying a fancier model.
 
 ## Ultrafast MRI movie shows more than anatomy
 
-<div class="lead-line">After contrast is injected, repeated MRI frames reveal <strong>how it appears through the breast's vessels over time.</strong></div>
+<!-- <div class="lead-line">After contrast is injected, repeated MRI frames reveal <strong>how it appears through the breast's vessels over time.</strong></div> -->
 
-![](figures/movie_curves.svg){.nostretch width="62%" fig-align="center"}
+![](figures/movie_curves.svg){.nostretch width="80%" fig-align="center"}
 
 ::: {.three-facts}
 <div><strong>179</strong><span>labeled exams, 141 patients</span></div>
