@@ -24,7 +24,7 @@ execute:
   freeze: auto
 ---
 
-## Neoadjuvant Therapy is given before surgery, and can shrink a tumor.
+## Neoadjuvant therapy is given before surgery, and can shrink a tumor.
 
 ::: {.motivation-grid}
 ::: {.story-card}
