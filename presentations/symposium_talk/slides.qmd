@@ -26,12 +26,24 @@ execute:
 
 ## Neoadjuvant therapy is given before surgery, and can shrink a tumor.
 
-::: {.story-lines}
-**Treatment:** Neoadjuvant therapy is given before surgery to shrink the tumor.
+::: {.motivation-grid}
+::: {.story-card}
+<div class="card-kicker">THE TREATMENT</div>
+<div class="card-icon">Before surgery</div>
+<p>Neoadjuvant therapy is given before surgery to shrink the tumor.</p>
+:::
 
-**Outcome:** About 1 in 3 exams came from patients who achieved a pathologic complete response (pCR): no invasive cancer remained in the breast or nearby lymph nodes at surgery. Achieving pCR is associated with better long-term outcomes.
+::: {.story-card .feature-card}
+<div class="card-kicker">THE OUTCOME</div>
+<div class="big-stat">≈ 1 in 3</div>
+<p>exams came from patients who achieved a pathologic complete response (pCR): no invasive cancer remained in the breast or nearby lymph nodes at surgery, associated with better long-term outcomes.</p>
+:::
 
-**Question:** Can a GNN use connections within breast vessel networks to improve treatment-response prediction?
+::: {.story-card}
+<div class="card-kicker">THE QUESTION</div>
+<div class="card-icon">Can a GNN help?</div>
+<p>Can a GNN use connections within breast vessel networks to improve treatment-response prediction?</p>
+:::
 :::
 
 <div class="aside-note">A graph neural network, or GNN, learns from both measurements at vessel locations and the connections between them.</div>
