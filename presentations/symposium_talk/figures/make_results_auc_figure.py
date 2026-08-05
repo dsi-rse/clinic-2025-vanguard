@@ -150,16 +150,7 @@ def main() -> None:
         ax.spines[side].set_visible(False)
     ax.spines["bottom"].set_color(INK)
 
-    fig.text(
-        0.655,
-        0.015,
-        "Patient-level, pooled out-of-fold predictions; error bars are 95% bootstrap CIs.",
-        fontsize=8.5,
-        color=INK,
-        ha="center",
-    )
-
-    fig.subplots_adjust(left=0.34, right=0.97, top=0.92, bottom=0.22)
+    fig.subplots_adjust(left=0.34, right=0.97, top=0.92, bottom=0.14)
     fig.savefig(OUT_SVG, transparent=True, bbox_inches="tight")
     plt.close(fig)
     print(f"wrote {OUT_SVG}")
