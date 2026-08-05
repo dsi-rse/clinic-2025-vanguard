@@ -51,17 +51,23 @@ clinical tool or a replacement for physicians.
 
 ## Tumors build a messier blood supply
 
-::: {.image-compare}
-::: {.image-panel}
-![](figures/vessels_normal.png){.nostretch fig-align="center"}
+<div class="lead-line">New vessels don't look or behave like normal ones.</div>
 
-**Normal vessels: organized, efficient.** Blood flows through a predictable, well-structured network.
+::: {.result-grid}
+::: {.result-card}
+![](figures/vessels_normal.png){.nostretch height="180px" fig-align="center"}
+
+<strong>Normal vessels: organized, efficient.</strong>
+
+Blood flows through a predictable, well-structured network.
 :::
 
-::: {.image-panel .caution}
-![](figures/vessels_tumor.png){.nostretch fig-align="center"}
+::: {.result-card .caution}
+![](figures/vessels_tumor.png){.nostretch height="180px" fig-align="center"}
 
-**Tumor vessels: dense, tortuous, leaky.** Tumors stimulate abnormal vessel growth as they grow.
+<strong>Tumor vessels: dense, tortuous, leaky.</strong>
+
+Tumors stimulate abnormal vessel growth as they grow. Structure may reflect how aggressive a tumor is.
 :::
 :::
 

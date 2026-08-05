@@ -246,36 +246,6 @@ $body-bg: #ffffff;
   margin: 9px 0 0;
 }
 
-.image-compare {
-  display: grid;
-  gap: 40px;
-  grid-template-columns: 1fr 1fr;
-  margin-top: 30px;
-}
-
-.image-panel {
-  text-align: center;
-}
-
-.reveal .slides section .image-panel img {
-  border-radius: 10px;
-  border-top: 6px solid var(--green);
-  height: 400px;
-  max-width: 100%;
-  object-fit: cover;
-  width: auto;
-}
-
-.reveal .slides section .image-panel.caution img {
-  border-top-color: var(--gold);
-}
-
-.image-panel p {
-  font-size: 0.7em;
-  margin: 16px 6px 0;
-  text-align: left;
-}
-
 .takeaway-banner {
   margin: 20px 120px 0;
   text-align: center;
