@@ -349,26 +349,6 @@ $body-bg: #ffffff;
   color: #fff;
 }
 
-// Vertically center the closing slide's body in the space below the title,
-// instead of letting it sit stranded at the top with a dead gap below --
-// this slide's content is naturally short, so top-alignment (the deck's
-// default) leaves too much empty space beneath it. The title stays pinned
-// at the top like every other slide: .thank-you-body (not the whole
-// wrapper) is the flex item that grows and centers its own children,
-// so h2 keeps its normal position instead of drifting to the middle too.
-#thank-you .autofit-inner {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-#thank-you .thank-you-body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: center;
-}
-
 #deck-logos {
   align-items: center;
   background: var(--maroon);
