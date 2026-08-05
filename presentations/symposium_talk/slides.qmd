@@ -43,8 +43,6 @@ execute:
 :::
 :::
 
-<div class="aside-note">A graph neural network, or GNN, learns from both measurements at vessel locations and the connections between them.</div>
-
 <div class="plain-callout">Earlier prediction could guide less intensive therapy for patients likely to achieve pCR and alternative therapy for those unlikely to do so.</div>
 
 ::: {.notes}
