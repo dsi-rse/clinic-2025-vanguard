@@ -254,17 +254,14 @@ $body-bg: #ffffff;
 }
 
 #can-vessel-networks-help-personalize-treatment .motivation-grid {
+  gap: 12px;
+  grid-template-columns: 1fr;
   margin-top: 14px;
 }
 
 #can-vessel-networks-help-personalize-treatment .story-card {
   min-height: 0;
   padding: 16px 20px;
-}
-
-#can-vessel-networks-help-personalize-treatment .plain-callout {
-  margin-top: 14px;
-  padding: 10px 20px;
 }
 
 // Slide-scoped overrides (targeting reveal's generated slide id) so the vessel

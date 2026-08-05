@@ -34,7 +34,9 @@ execute:
 
 ::: {.story-card .feature-card}
 <div class="card-kicker">THE OUTCOME</div>
-<p>About 1 in 3 exams came from patients who achieved a pathologic complete response (pCR): no invasive cancer remained in the breast or nearby lymph nodes at surgery. Achieving pCR is associated with better long-term outcomes.</p>
+<p>About 1 in 3 exams came from patients who achieved a pathologic complete response (**pCR**): no invasive cancer remained in the breast or nearby lymph nodes at surgery.
+ <!-- Achieving pCR is associated with better long-term outcomes. -->
+ </p>
 :::
 
 ::: {.story-card}
@@ -43,7 +45,7 @@ execute:
 :::
 :::
 
-<div class="plain-callout">Earlier prediction could guide less intensive therapy for patients likely to achieve pCR and alternative therapy for those unlikely to do so.</div>
+Earlier prediction could guide less intensive therapy for patients likely to achieve pCR and alternative therapy for those unlikely to do so.
 
 ::: {.notes}
 Many patients with breast cancer receive neoadjuvant therapy before surgery. A
