@@ -301,25 +301,6 @@ $body-bg: #ffffff;
   grid-template-columns: 1fr 1fr;
 }
 
-// Center the temporal-sampling caption in the gap between the chart and the
-// three-facts row (measured: 105px gap, 25px line -> 40px above and below).
-// Quarto's figure/p wrapper around the chart carries a ~32px default UA
-// bottom margin that was collapsing with (and dominating over) aside-note's
-// own margin-top, so the top gap didn't move until this got zeroed too.
-#ultrafast-mri-movie-shows-more-than-anatomy figure,
-#ultrafast-mri-movie-shows-more-than-anatomy figure p,
-#ultrafast-mri-movie-shows-more-than-anatomy .quarto-figure {
-  margin-bottom: 0;
-}
-
-#ultrafast-mri-movie-shows-more-than-anatomy .aside-note {
-  margin-top: 40px;
-}
-
-#ultrafast-mri-movie-shows-more-than-anatomy .three-facts {
-  margin-top: 40px;
-}
-
 .takeaway-banner {
   margin: 20px 120px 0;
   text-align: center;

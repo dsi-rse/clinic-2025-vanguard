@@ -62,7 +62,7 @@ def main() -> None:
         markerfacecolor=MAROON,
         markeredgecolor="white",
         markeredgewidth=0.8,
-        label=f"UChicago ultrafast ({len(uchicago_curve)} frames, {uchicago_times[-1]:.0f}s)",
+        label="UChicago Ultrafast",
         zorder=3,
     )
     ax.plot(
@@ -75,7 +75,7 @@ def main() -> None:
         markerfacecolor=GRAY,
         markeredgecolor="white",
         markeredgewidth=0.8,
-        label=f"Conventional DCE-MRI: {len(DUKE_CURVE)} phases over {DUKE_TIMES_SECONDS[-1]} seconds",
+        label="Conventional DCE-MRI",
         zorder=3,
     )
 

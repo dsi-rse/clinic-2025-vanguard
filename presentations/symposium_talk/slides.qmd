@@ -34,7 +34,7 @@ execute:
 
 ::: {.story-card .feature-card}
 <div class="card-kicker">THE OUTCOME</div>
-<p>About 1 in 3 exams came from patients who achieved a pathologic complete response (**pCR**): no invasive cancer remained in the breast or nearby lymph nodes at surgery.
+<p>About 1 in 3 exams came from patients who achieved a **pathologic complete response** (pCR): no invasive cancer remained in the breast or nearby lymph nodes at surgery.
  <!-- Achieving pCR is associated with better long-term outcomes. -->
  </p>
 :::
@@ -97,11 +97,9 @@ beyond just trying a fancier model.
 
 ![](figures/movie_curves.svg){.nostretch width="80%" fig-align="center"}
 
-<div class="aside-note centered">Curves are from different patients and are shown only to compare temporal sampling.</div>
-
 ::: {.three-facts}
-<div><strong>179</strong><span>exams with known outcomes</span></div>
-<div><strong>1,226</strong><span>additional exams without outcome labels, used to teach the model how contrast changes over time</span></div>
+<div><strong>179</strong><span>pCR-labeled exams, 141 patients</span></div>
+<div><strong>1,226</strong><span>pCR-unlabeled exams, pretraining only</span></div>
 <div><strong>13–24</strong><span>frames per ultrafast movie</span></div>
 :::
 
@@ -109,14 +107,13 @@ beyond just trying a fancier model.
 These scans are closer to a short movie than a still picture. A contrast agent
 enters the blood, and the scanner repeatedly records where it appears at one
 point in the vessel network, over and over. Those are two real curves, same
-kind of signal, same relative-enhancement scale, from different patients: a
-conventional protocol takes five snapshots spread across about ten minutes;
-our ultrafast protocol takes twenty-four frames in about two minutes, so we
-watch the wash-in happen instead of connecting a few dots across it. We have
-179 exams with known outcomes to predict response with, plus a much larger
-pool of 1,226 additional exams with no outcome label at all, which we can
-still use to teach the model how contrast changes over time, without ever
-touching the answer we're trying to predict.
+kind of signal, same relative-enhancement scale: Duke's standard protocol,
+public reference data, takes five snapshots spread across about ten minutes;
+UChicago's ultrafast protocol takes twenty-four frames in about two minutes,
+so we watch the wash-in happen instead of connecting a few dots across it. We
+have 179 pCR-labeled exams from 141 patients to predict response with, plus a
+much larger pool of 1,226 exams with no pCR label at all, which we can
+still learn from without ever touching the answer we're trying to predict.
 :::
 
 ## Does the graph structure help? How about pretraining?
