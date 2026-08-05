@@ -53,7 +53,7 @@ clinical tool or a replacement for physicians.
 
 ::: {.result-grid}
 ::: {.result-card}
-![](figures/vessels_normal.png){.nostretch height="380px" fig-align="center"}
+![](figures/vessels_normal.png){.nostretch height="320px" fig-align="center"}
 
 <strong>Normal vessels: organized, efficient.</strong>
 
@@ -61,7 +61,7 @@ Blood flows through a predictable, well-structured network.
 :::
 
 ::: {.result-card .caution}
-![](figures/vessels_tumor.png){.nostretch height="380px" fig-align="center"}
+![](figures/vessels_tumor.png){.nostretch height="320px" fig-align="center"}
 
 <strong>Tumor vessels: dense, tortuous, leaky.</strong>
 
