@@ -24,7 +24,7 @@ execute:
   freeze: auto
 ---
 
-## Neoadjuvant therapy is given before surgery, and can shrink a tumor.
+## Can vessel networks help personalize treatment?
 
 ::: {.motivation-grid}
 ::: {.story-card}
