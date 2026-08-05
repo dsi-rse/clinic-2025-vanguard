@@ -203,6 +203,24 @@ $body-bg: #ffffff;
   margin-top: 8px;
 }
 
+.story-lines p {
+  margin: 0 0 12px;
+}
+
+.story-lines p:last-child {
+  margin-bottom: 0;
+}
+
+.aside-note {
+  color: var(--muted);
+  font-size: 0.62em;
+  margin-top: 14px;
+}
+
+.aside-note.centered {
+  text-align: center;
+}
+
 .question-banner {
   font-size: 0.9em;
   margin: 20px 95px 0;
@@ -226,6 +244,36 @@ $body-bg: #ffffff;
 
 .result-card p {
   margin: 9px 0 0;
+}
+
+.image-compare {
+  display: grid;
+  gap: 40px;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 30px;
+}
+
+.image-panel {
+  text-align: center;
+}
+
+.reveal .slides section .image-panel img {
+  border-radius: 10px;
+  border-top: 6px solid var(--green);
+  height: 400px;
+  max-width: 100%;
+  object-fit: cover;
+  width: auto;
+}
+
+.reveal .slides section .image-panel.caution img {
+  border-top-color: var(--gold);
+}
+
+.image-panel p {
+  font-size: 0.7em;
+  margin: 16px 6px 0;
+  text-align: left;
 }
 
 .takeaway-banner {
@@ -376,6 +424,9 @@ html.print-pdf .reveal .slides #title-slide {
     radial-gradient(circle at 90% 54%, rgba(255,255,255,0.10) 0 16px, transparent 17px),
     linear-gradient(135deg, #4d0000 0%, #800000 62%, #9b1b30 100%) !important;
   padding: 120px 95px 100px !important;
+  height: auto !important;
+  min-height: 100% !important;
+  top: 0 !important;
 }
 
 // :has() version for browsers that support it, plus a :first-of-type

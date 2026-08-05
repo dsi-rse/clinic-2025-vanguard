@@ -8,6 +8,14 @@
 # drives the same Chromium headless binary over the DevTools Protocol instead,
 # polling `document.querySelectorAll('.reveal .pdf-page').length` until it
 # appears and stabilizes before printing, which reliably captures every slide.
+#
+# It also pins the viewport to the deck's own 1280x720 slide size before
+# navigating. Headless Chrome otherwise defaults to an ~800px-wide viewport,
+# which trips the deck's `@media (max-width: 900px)` narrow-screen font-size
+# rule during layout -- but Page.printToPDF paginates at the full 1280px slide
+# width regardless, so custom.scss's autofit script (which reads live layout
+# to decide whether a slide needs shrinking) was measuring a smaller font than
+# what actually gets printed, and under-shrinking overfull slides.
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
@@ -82,6 +90,7 @@ try:
         return cmd("Runtime.evaluate", expression=expr, returnByValue=True)["result"].get("value")
 
     cmd("Page.enable")
+    cmd("Emulation.setDeviceMetricsOverride", width=1280, height=720, deviceScaleFactor=1, mobile=False)
     cmd("Page.navigate", url=f"file://{html_path}?print-pdf")
 
     deadline = time.time() + timeout_s

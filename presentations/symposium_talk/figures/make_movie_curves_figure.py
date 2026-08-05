@@ -75,7 +75,7 @@ def main() -> None:
         markerfacecolor=GRAY,
         markeredgecolor="white",
         markeredgewidth=0.8,
-        label=f"Duke, public reference ({len(DUKE_CURVE)} phases, {DUKE_TIMES_SECONDS[-1]}s)",
+        label=f"Conventional DCE-MRI: {len(DUKE_CURVE)} phases over {DUKE_TIMES_SECONDS[-1]} seconds",
         zorder=3,
     )
 

@@ -97,8 +97,13 @@ def main() -> None:
     """Render the four matched arms plus the protocol-only audit to results_auc.svg."""
     table = pd.read_csv(DATA_CSV)
     auc = table.loc[table["kind"] == "auc"].reset_index(drop=True)
+    # Talk-only relabeling for a nontechnical audience -- the shared CSV (and the
+    # poster's own script/figure) keep "random start" and are not touched here.
+    talk_labels = auc["label"].str.replace(
+        "random start", "trained from scratch", regex=False
+    )
 
-    fig, ax = plt.subplots(figsize=(7.2, 3.05))
+    fig, ax = plt.subplots(figsize=(7.2, 3.3))
 
     for y, row in enumerate(auc.itertuples(index=False)):
         color = MAROON if row.architecture == "message passing" else GREY
@@ -122,10 +127,10 @@ def main() -> None:
 
     ax.axvline(0.5, color=INK, ls="--", lw=1.4, alpha=0.55, zorder=0)
     ax.set_yticks([*range(len(auc)), protocol_y])
-    ax.set_yticklabels([*auc["label"], PROTOCOL_ONLY["label"]], fontsize=12)
+    ax.set_yticklabels([*talk_labels, PROTOCOL_ONLY["label"]], fontsize=12)
     ax.invert_yaxis()
     ax.set_xlim(0.30, 0.72)
-    ax.set_xlabel("Patient-level pooled OOF AUC (95% CI)", fontsize=12)
+    ax.set_xlabel("pCR prediction AUC (0.5 = chance; higher is better)", fontsize=12)
     ax.annotate(
         "chance",
         xy=(0.5, 1.0),
@@ -145,7 +150,16 @@ def main() -> None:
         ax.spines[side].set_visible(False)
     ax.spines["bottom"].set_color(INK)
 
-    fig.subplots_adjust(left=0.34, right=0.97, top=0.92, bottom=0.14)
+    fig.text(
+        0.655,
+        0.015,
+        "Patient-level, pooled out-of-fold predictions; error bars are 95% bootstrap CIs.",
+        fontsize=8.5,
+        color=INK,
+        ha="center",
+    )
+
+    fig.subplots_adjust(left=0.34, right=0.97, top=0.92, bottom=0.22)
     fig.savefig(OUT_SVG, transparent=True, bbox_inches="tight")
     plt.close(fig)
     print(f"wrote {OUT_SVG}")
