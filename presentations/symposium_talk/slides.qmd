@@ -60,25 +60,27 @@ clinical tool or a replacement for physicians.
 
 ## Tumors build a messier blood supply
 
+::: {.image-row}
+![](figures/vessels_normal.png){.nostretch height="300px" fig-align="center"}
+
+![](figures/vessels_tumor.png){.nostretch height="300px" fig-align="center"}
+:::
+
 ::: {.result-grid}
 ::: {.result-card}
-![](figures/vessels_normal.png){.nostretch height="320px" fig-align="center"}
-
 <strong>Normal vessels: organized, efficient.</strong>
 
 Blood flows through a predictable, well-structured network.
 :::
 
 ::: {.result-card .caution}
-![](figures/vessels_tumor.png){.nostretch height="320px" fig-align="center"}
-
 <strong>Tumor vessels: dense, tortuous, leaky.</strong>
 
 Tumors stimulate abnormal vessel growth as they grow. Structure may reflect how aggressive a tumor is.
 :::
 :::
 
-<div class="plain-callout">Because tumor vessels differ in both structure and blood flow, those patterns may help predict treatment response.</div>
+Because tumor vessels differ in both structure and blood flow, those patterns may help predict treatment response.
 
 ::: {.notes}
 Tumors don't just sit passively. They recruit their own blood supply to keep growing, and

@@ -272,7 +272,7 @@ $body-bg: #ffffff;
 }
 
 #tumors-build-a-messier-blood-supply .result-grid {
-  margin-top: 14px;
+  margin-top: 8px;
 }
 
 // Match slide 2's story-card palette (grey default, maroon highlight)
@@ -289,22 +289,35 @@ $body-bg: #ffffff;
   border-top-color: var(--maroon);
 }
 
-// Quarto wraps each figure as <div class="quarto-figure"><figure><p><img></p></figure></div>;
-// the UA default <figure>/<p> margins on top of Quarto's own .quarto-figure margin were
-// eating ~65px per card that should go to the image.
-#tumors-build-a-messier-blood-supply .result-card figure,
-#tumors-build-a-messier-blood-supply .result-card figure p,
-#tumors-build-a-messier-blood-supply .result-card .quarto-figure {
-  margin: 0;
-}
-
 #tumors-build-a-messier-blood-supply .result-card p {
   margin: 5px 0 0;
 }
 
-#tumors-build-a-messier-blood-supply .plain-callout {
-  margin-top: 14px;
-  padding: 10px 20px;
+// Images now sit in their own row above the cards, aligned to the same
+// two-column grid so each image lines up over its matching card.
+#tumors-build-a-messier-blood-supply .image-row {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1fr 1fr;
+}
+
+// Center the temporal-sampling caption in the gap between the chart and the
+// three-facts row (measured: 105px gap, 25px line -> 40px above and below).
+// Quarto's figure/p wrapper around the chart carries a ~32px default UA
+// bottom margin that was collapsing with (and dominating over) aside-note's
+// own margin-top, so the top gap didn't move until this got zeroed too.
+#ultrafast-mri-movie-shows-more-than-anatomy figure,
+#ultrafast-mri-movie-shows-more-than-anatomy figure p,
+#ultrafast-mri-movie-shows-more-than-anatomy .quarto-figure {
+  margin-bottom: 0;
+}
+
+#ultrafast-mri-movie-shows-more-than-anatomy .aside-note {
+  margin-top: 40px;
+}
+
+#ultrafast-mri-movie-shows-more-than-anatomy .three-facts {
+  margin-top: 40px;
 }
 
 .takeaway-banner {
