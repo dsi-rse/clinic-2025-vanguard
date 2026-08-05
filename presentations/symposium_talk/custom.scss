@@ -246,6 +246,34 @@ $body-bg: #ffffff;
   margin: 9px 0 0;
 }
 
+// Slide-scoped overrides (targeting reveal's generated slide id) so the vessel
+// comparison slide can run its images much larger without shrinking margins
+// on every other slide that reuses .result-grid/.result-card/.plain-callout.
+#tumors-build-a-messier-blood-supply h2 {
+  margin-bottom: 10px;
+}
+
+#tumors-build-a-messier-blood-supply .lead-line {
+  margin: 2px auto 8px;
+}
+
+#tumors-build-a-messier-blood-supply .result-grid {
+  margin-top: 8px;
+}
+
+#tumors-build-a-messier-blood-supply .result-card {
+  padding: 12px 18px;
+}
+
+#tumors-build-a-messier-blood-supply .result-card p {
+  margin: 3px 0 0;
+}
+
+#tumors-build-a-messier-blood-supply .plain-callout {
+  margin-top: 8px;
+  padding: 8px 18px;
+}
+
 .takeaway-banner {
   margin: 20px 120px 0;
   text-align: center;
