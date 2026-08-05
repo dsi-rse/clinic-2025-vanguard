@@ -51,8 +51,6 @@ clinical tool or a replacement for physicians.
 
 ## Tumors build a messier blood supply
 
-<div class="lead-line">New vessels don't look or behave like normal ones.</div>
-
 ::: {.result-grid}
 ::: {.result-card}
 ![](figures/vessels_normal.png){.nostretch height="380px" fig-align="center"}
