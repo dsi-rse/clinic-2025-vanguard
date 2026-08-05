@@ -17,7 +17,6 @@ $body-bg: #ffffff;
   --muted: #656565;
   --soft: #f4f3f1;
   --gray: #737b88;
-  --green: #4f6f52;
   --deck-bottom-safe: 78px;
   --deck-logo-bar-height: 60px;
   --deck-logo-height: 36px;
@@ -233,7 +232,7 @@ $body-bg: #ffffff;
 }
 
 .result-card {
-  border-top: 6px solid var(--green);
+  border-top: 6px solid #9b9b9b;
   font-size: 0.7em;
   min-height: 145px;
 }
