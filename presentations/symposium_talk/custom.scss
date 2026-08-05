@@ -275,9 +275,18 @@ $body-bg: #ffffff;
   margin-top: 14px;
 }
 
+// Match slide 2's story-card palette (grey default, maroon highlight)
+// instead of .result-card's green/gold, so the two card-grid slides read
+// as one visual system.
 #tumors-build-a-messier-blood-supply .result-card {
+  border-top-color: #9b9b9b;
   font-size: 1em;
   padding: 14px 20px;
+}
+
+#tumors-build-a-messier-blood-supply .result-card.caution {
+  background: var(--maroon-light);
+  border-top-color: var(--maroon);
 }
 
 // Quarto wraps each figure as <div class="quarto-figure"><figure><p><img></p></figure></div>;
