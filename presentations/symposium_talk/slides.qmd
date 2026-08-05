@@ -128,9 +128,21 @@ identical across all four combinations.
 
 ## Pretraining gave the graph model a real boost
 
-![](figures/results_auc.svg){.nostretch width="62%" fig-align="center"}
+![](figures/results_auc.svg){.nostretch width="54%" fig-align="center"}
 
-<div class="takeaway-banner">The boost was real: <strong>+0.149 [+0.046, +0.255]</strong> AUC for the GNN, a gain graph-free didn't reliably show. Pretrained, GNN then beat graph-free by <strong>+0.079 [+0.010, +0.155]</strong>.</div>
+::: {.result-grid}
+::: {.result-card}
+<strong>The boost was real.</strong>
+
++0.149 [+0.046, +0.255] AUC for the GNN, a gain graph-free didn't reliably show. Pretrained, GNN then beat graph-free by +0.079 [+0.010, +0.155].
+:::
+
+::: {.result-card .caution}
+<strong>But timing tracks it too.</strong>
+
+Timing alone reaches nearly the same AUC (0.587 vs. 0.583) and correlates with it (r = 0.50) &mdash; a possible confound.
+:::
+:::
 
 ::: {.notes}
 Pretraining gave the graph model a real, statistically meaningful boost: about fifteen
@@ -139,34 +151,14 @@ summary model improved too, but by less, and its interval crosses zero, so we ca
 confident that helped at all. Once both models were pretrained, the graph model beat
 the simple summary by about eight points. In other words, the vessel connections only
 started to matter after the model had rehearsed the future.
-:::
 
-## But the clock may be part of the story
-
-::: {.result-grid}
-::: {.result-card .caution}
-<strong>Timing alone scores nearly as well.</strong>
-
-A model using only frame count, scan duration, and cadence (no imaging at all) reaches 0.587 AUC, almost identical to the pretrained graph model's 0.583.
-:::
-
-::: {.result-card .caution}
-<strong>The two track each other.</strong>
-
-Their predictions correlate (Pearson r = 0.50), so acquisition timing is associated with outcome in this cohort.
-:::
-:::
-
-<div class="takeaway-banner">This raises concern about protocol dependence, but doesn't tell us how much of the signal is technical versus biological. Adjustment could also remove real patient differences.</div>
-
-::: {.notes}
-Here's the catch. A model that sees nothing but scan timing (frame count, duration,
-cadence) scores almost exactly as well as our pretrained graph model, and their
-predictions correlate at about r equals point five. That's a real concern: some of
-what looks like a vessel signal could instead be tracking which protocol a patient
-happened to get. But it doesn't prove that. Adjusting for timing could just as easily
-strip out genuine biological differences that happen to correlate with acquisition.
-Separating the two is exactly what we test next.
+But here's the catch, shown as the fifth row on this same plot. A model that sees
+nothing but scan timing (frame count, duration, cadence) scores almost exactly as well,
+and its predictions correlate with the pretrained graph model's at about r equals point
+five. That's a real concern: some of what looks like a vessel signal could instead be
+tracking which protocol a patient happened to get. It doesn't prove that; adjusting for
+timing could just as easily strip out genuine biological differences that happen to
+correlate with acquisition. Separating the two is exactly what we test next.
 :::
 
 ## What should you remember?
@@ -198,4 +190,23 @@ acquisition timing is also linked to outcome in this cohort, so our next step is
 testing whether the vessel signal survives once we account for that. Teaching the
 model to anticipate the future made the vessel map matter, but timing still
 complicates the story.
+:::
+
+## Thank you
+
+<div class="lead-line">Questions welcome.</div>
+
+::: {.three-facts}
+<div><strong>Code</strong><span>github.com/dsi-clinic/vanguard</span></div>
+<div><strong>Contact</strong><span>svenancio@wisc.edu</span></div>
+:::
+
+<div class="plain-callout">Thanks to Zhen Ren, Milica Medved, and Greg Karczmar for feedback and MRI-physics expertise; Fred Howard for the development cohort; and Bella Summe, Julia Luo, José Cardona Arias, and Rebecca Wu for earlier vessel-pipeline development.</div>
+
+::: {.notes}
+Thank you. Happy to take questions now, or find me afterward, my contact and the
+code are both up here. I also want to thank the people who made this possible:
+Zhen Ren, Milica Medved, and Greg Karczmar for feedback and MRI-physics expertise,
+Fred Howard for the development cohort, and Bella Summe, Julia Luo, José Cardona
+Arias, and Rebecca Wu for earlier vessel-pipeline work this builds on.
 :::
