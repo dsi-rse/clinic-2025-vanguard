@@ -300,6 +300,13 @@ $body-bg: #ffffff;
   grid-template-columns: 1fr 1fr;
 }
 
+// The URL/email are the two things someone in the audience might actually
+// act on, so give them more visual weight than .three-facts' default
+// small-print size (0.62em, tuned for the exam-count stats on slide 4).
+#thank-you .three-facts span {
+  font-size: 0.9em;
+}
+
 .takeaway-banner {
   margin: 20px 120px 0;
   text-align: center;

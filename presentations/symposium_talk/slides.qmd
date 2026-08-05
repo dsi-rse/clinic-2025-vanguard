@@ -200,14 +200,12 @@ some of its signal may come from how the scans were collected.
 
 ## Thank you
 
-<div class="lead-line">Questions welcome.</div>
-
 ::: {.three-facts}
 <div><strong>Code</strong><span>github.com/dsi-clinic/vanguard</span></div>
 <div><strong>Contact</strong><span>svenancio@wisc.edu</span></div>
 :::
 
-<div class="plain-callout">Thanks to Zhen Ren, Milica Medved, and Greg Karczmar for feedback and MRI-physics expertise; Fred Howard for the development cohort; and Bella Summe, Julia Luo, José Cardona Arias, and Rebecca Wu for earlier vessel-pipeline development.</div>
+<div class="plain-callout">Thanks to <strong>Zhen Ren</strong>, <strong>Milica Medved</strong>, and <strong>Greg Karczmar</strong> for feedback and MRI-physics expertise; Fred Howard for the development cohort; and Bella Summe, Julia Luo, José Cardona Arias, and Rebecca Wu for earlier vessel-pipeline development.</div>
 
 ::: {.notes}
 Thank you. Happy to take questions now, or find me afterward, my contact and the
