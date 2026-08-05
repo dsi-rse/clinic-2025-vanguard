@@ -149,7 +149,7 @@ $body-bg: #ffffff;
 }
 
 .story-card p {
-  font-size: 0.74em;
+  font-size: 0.9em;
   margin: 0;
 }
 
@@ -244,6 +244,32 @@ $body-bg: #ffffff;
 
 .result-card p {
   margin: 9px 0 0;
+}
+
+// Slide-scoped overrides (targeting reveal's generated slide id, escaped for
+// the trailing period reveal keeps from the heading text) so the motivation
+// cards can drop their old card-icon/big-stat headline and use tighter
+// padding without affecting .story-card if it's ever reused elsewhere.
+#neoadjuvant-therapy-is-given-before-surgery-and-can-shrink-a-tumor\. h2 {
+  margin-bottom: 14px;
+}
+
+#neoadjuvant-therapy-is-given-before-surgery-and-can-shrink-a-tumor\. .motivation-grid {
+  margin-top: 14px;
+}
+
+#neoadjuvant-therapy-is-given-before-surgery-and-can-shrink-a-tumor\. .story-card {
+  min-height: 0;
+  padding: 16px 20px;
+}
+
+#neoadjuvant-therapy-is-given-before-surgery-and-can-shrink-a-tumor\. .aside-note {
+  margin-top: 10px;
+}
+
+#neoadjuvant-therapy-is-given-before-surgery-and-can-shrink-a-tumor\. .plain-callout {
+  margin-top: 14px;
+  padding: 10px 20px;
 }
 
 // Slide-scoped overrides (targeting reveal's generated slide id) so the vessel
