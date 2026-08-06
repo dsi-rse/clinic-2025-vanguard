@@ -58,46 +58,68 @@ $body-bg: #ffffff;
   object-fit: contain;
 }
 
+// A flat maroon field, the same one the logo bar and headings use, so the
+// title reads as one plane of colour rather than a gradient the rest of the
+// deck never repeats.
 #title-slide {
-  background:
-    radial-gradient(circle at 84% 22%, rgba(255,255,255,0.16) 0 8px, transparent 9px),
-    radial-gradient(circle at 74% 38%, rgba(255,255,255,0.12) 0 12px, transparent 13px),
-    radial-gradient(circle at 90% 54%, rgba(255,255,255,0.10) 0 16px, transparent 17px),
-    linear-gradient(135deg, #4d0000 0%, #800000 62%, #9b1b30 100%);
+  background: var(--maroon);
   color: #fff;
   height: 100%;
-  padding: 120px 95px 100px !important;
+  padding: 120px 95px 110px !important;
 }
 
 #title-slide h1 {
   color: #fff;
-  font-size: 2.1em;
+  font-size: 2.25em;
+  font-weight: 800;
   letter-spacing: -0.035em;
-  line-height: 1.03;
-  max-width: 980px;
+  line-height: 1.04;
+  max-width: 1090px;
   text-transform: none;
 }
 
-#title-slide .subtitle {
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 1.18em;
-  font-weight: 600;
-  margin-top: 22px;
+// With no subtitle between them, a short rule carries the step down from the
+// title to the byline. Reveal's title block wraps the author in Quarto's own
+// `quarto-title-author*` divs, so the byline is styled through those rather
+// than a `.author` class.
+#title-slide .quarto-title-authors {
+  display: block;
+  margin-top: 56px;
 }
 
-#title-slide .author {
+#title-slide .quarto-title-authors::before {
+  background: rgba(255, 255, 255, 0.55);
+  content: "";
+  display: block;
+  height: 3px;
+  margin-bottom: 28px;
+  width: 132px;
+}
+
+#title-slide .quarto-title-author,
+#title-slide .quarto-title-author-name {
+  text-align: left;
+  width: auto;
+}
+
+#title-slide .quarto-title-author-name {
   color: #fff;
-  font-size: 1em;
-  font-weight: 700;
-  margin-top: 60px;
+  font-size: 0.95em;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  line-height: 1.3;
+  text-transform: uppercase;
 }
 
 #title-slide .title-team {
-  color: rgba(255,255,255,0.85);
+  color: rgba(255, 255, 255, 0.82);
   display: inline-block;
-  font-size: 0.62em;
+  font-size: 0.66em;
   font-weight: 400;
-  margin-top: 10px;
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+  margin-top: 14px;
+  text-transform: none;
 }
 
 .motivation-grid,
@@ -216,6 +238,17 @@ $body-bg: #ffffff;
   margin-top: 14px;
 }
 
+// Source credit for a figure taken from the literature. It closes the slide,
+// below the takeaway line, and stays smaller and quieter than .aside-note so
+// it reads as provenance rather than something to say out loud.
+.image-credit {
+  color: var(--muted);
+  font-size: 0.46em;
+  line-height: 1.35;
+  margin-top: 12px;
+  text-align: right;
+}
+
 .aside-note.centered {
   text-align: center;
 }
@@ -299,6 +332,27 @@ $body-bg: #ffffff;
   display: grid;
   gap: 24px;
   grid-template-columns: 1fr 1fr;
+}
+
+// The caption belongs to the plot, so it sits tight under it and shares its
+// width, leaving the larger gap for the exam-count row below. The heading runs
+// two lines here (it carries the definition of "ultrafast"), so it also gives
+// back some of .reveal h2's default bottom margin.
+#ultrafast-mri-captures-images-every-few-seconds-as-contrast-enters-tissue h2 {
+  margin-bottom: 14px;
+}
+
+#ultrafast-mri-captures-images-every-few-seconds-as-contrast-enters-tissue .quarto-figure {
+  margin-bottom: 6px;
+}
+
+#ultrafast-mri-captures-images-every-few-seconds-as-contrast-enters-tissue .aside-note {
+  margin: 0 auto;
+  max-width: 80%;
+}
+
+#ultrafast-mri-captures-images-every-few-seconds-as-contrast-enters-tissue .three-facts {
+  margin-top: 30px;
 }
 
 // The URL/email are the two things someone in the audience might actually
@@ -444,18 +498,14 @@ html.print-pdf .reveal .slides section {
   padding: 34px 54px var(--deck-bottom-safe) !important;
 }
 
-// The gradient is set directly on #title-slide (not just the .pdf-page
+// The maroon field is set directly on #title-slide (not just the .pdf-page
 // wrapper below) because :has() is unsupported in the Chromium 91 that
 // Quarto's bundled `quarto tools install chromium` ships -- without this,
 // #title-slide's white text renders invisible on a white page in that PDF
 // export path, even though it looks fine in any modern browser.
 html.print-pdf .reveal .slides #title-slide {
-  background:
-    radial-gradient(circle at 84% 22%, rgba(255,255,255,0.16) 0 8px, transparent 9px),
-    radial-gradient(circle at 74% 38%, rgba(255,255,255,0.12) 0 12px, transparent 13px),
-    radial-gradient(circle at 90% 54%, rgba(255,255,255,0.10) 0 16px, transparent 17px),
-    linear-gradient(135deg, #4d0000 0%, #800000 62%, #9b1b30 100%) !important;
-  padding: 120px 95px 100px !important;
+  background: var(--maroon) !important;
+  padding: 120px 95px 110px !important;
   height: auto !important;
   min-height: 100% !important;
   top: 0 !important;
@@ -463,13 +513,9 @@ html.print-pdf .reveal .slides #title-slide {
 
 // :has() version for browsers that support it, plus a :first-of-type
 // fallback for Chromium 91 (the title slide is always the first printed
-// page) so the gradient still covers the full .pdf-page box, not just the
+// page) so the colour still covers the full .pdf-page box, not just the
 // #title-slide section within it.
 html.print-pdf .pdf-page:has(#title-slide),
 html.print-pdf .pdf-page:first-of-type {
-  background:
-    radial-gradient(circle at 84% 22%, rgba(255,255,255,0.16) 0 8px, transparent 9px),
-    radial-gradient(circle at 74% 38%, rgba(255,255,255,0.12) 0 12px, transparent 13px),
-    radial-gradient(circle at 90% 54%, rgba(255,255,255,0.10) 0 16px, transparent 17px),
-    linear-gradient(135deg, #4d0000 0%, #800000 62%, #9b1b30 100%) !important;
+  background: var(--maroon) !important;
 }

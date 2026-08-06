@@ -1,0 +1,21 @@
+<!-- Speaker notes for the title slide. Quarto generates that slide from the
+     YAML, and a `::: {.notes}` block before the first `##` becomes a slide of
+     its own instead of attaching to it, so the notes are injected here. Every
+     other slide keeps its notes inline in slides.qmd. -->
+<script>
+(function () {
+  var slide = document.getElementById('title-slide');
+  if (!slide || slide.querySelector('aside.notes')) return;
+  var notes = document.createElement('aside');
+  notes.className = 'notes';
+  notes.innerHTML =
+    '<p>Hello, my name is Spencer Venancio, and I am a student at the ' +
+    'University of Wisconsin–Madison. Today I will talk about whether ' +
+    'graph neural networks can use the blood vessel networks in breast MRI ' +
+    'to predict treatment response.</p>' +
+    '<p>This project was supported by the University of Chicago Data Science ' +
+    'Institute Summer Lab program. My advisor was Dr. Anna Woodard, and I ' +
+    'worked closely with colleagues Sarit Bose and Aakrithi Ram.</p>';
+  slide.appendChild(notes);
+})();
+</script>

@@ -23,3 +23,18 @@ The central reported comparisons, matching the final `symposium_poster`, are:
 - Acquisition-timing-only model (frame count, duration, cadence; no imaging): AUC 0.587, vs. the pretrained GNN's 0.583 (Pearson r = 0.50 between their predictions).
 
 The forecast-pretraining comparison is a completed result, not planned work.
+
+## Architecture figure (`figures/arch5.svg`)
+
+This figure is drawn outside the repo and checked in only as an SVG export, with
+its text flattened to outlines. Its four input-column labels are therefore real
+`<text>` elements laid over the export: "Ultrafast MRI / frames" and "MRI frame
+order / and scan timing". Their font size (21.3px Arial-metric) and baselines are
+measured from the outlines they replace, so they land in the same spot; headless
+Chrome resolves the family to Liberation Sans, which is metric-compatible.
+Re-exporting the figure from its source drawing drops these labels, so the source
+needs the same wording.
+
+The poster's copy of the same figure (`../symposium_poster/figures/arch4.pdf`,
+also a source-less export) still carries the older "UFast MRI volumes" and "DCE
+phase ordering and metadata" wording.

@@ -75,7 +75,10 @@ def main() -> None:
         markerfacecolor=GRAY,
         markeredgecolor="white",
         markeredgewidth=0.8,
-        label="Conventional DCE-MRI",
+        # The legend names the protocol and its sampling, not the source cohort:
+        # "Duke" is provenance the general-audience talk doesn't need.
+        label=f"Conventional DCE-MRI: {len(DUKE_CURVE)} phases over "
+        f"{DUKE_TIMES_SECONDS[-1]} seconds",
         zorder=3,
     )
 
