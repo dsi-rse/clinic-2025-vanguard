@@ -86,9 +86,11 @@ Vessel diagrams from *Nature Medicine*, Jain RK, "Molecular regulation of vessel
 ::: {.notes}
 Why might vessels carry predictive signal? Well, healthy blood vessels are
 organized, and blood flows through them efficiently. Meanwhile tumors stimulate
-new growth, which is often dense, tortuous, and leaky. That structure, and the
-way contrast flows through it, may reflect how aggressive the tumor is — which
-is why we expect it to help predict pCR.
+new growth, which is often dense, tortuous, and leaky. To see any of this on MRI
+we inject a metal-based dye called contrast into the blood, which is what makes
+the vessels light up. That structure, and the way contrast flows through it, may
+reflect tumor biology and sensitivity to treatment — which is why we expect it
+to help predict pCR.
 :::
 
 ## Ultrafast MRI captures images every few seconds as contrast enters tissue
