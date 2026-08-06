@@ -305,7 +305,20 @@ $body-bg: #ffffff;
 }
 
 #tumors-build-a-messier-blood-supply .result-grid {
-  margin-top: 8px;
+  margin-top: 20px;
+}
+
+// Each image sits inline in its own paragraph, so a text line box -- paragraph
+// margins plus room for descenders under the baseline -- padded ~66px around
+// two 300px-tall images. This slide is the deck's fullest, so that space goes
+// to the content instead; .result-grid keeps the gap below the images.
+#tumors-build-a-messier-blood-supply .image-row p {
+  margin: 0;
+}
+
+#tumors-build-a-messier-blood-supply .image-row img {
+  display: block;
+  margin: 0 auto;
 }
 
 // Match slide 2's story-card palette (grey default, maroon highlight)

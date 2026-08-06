@@ -1,6 +1,6 @@
 ---
 title: "Can Graph Neural Networks Use Breast MRI Vessel Networks to Predict Treatment Response?"
-author: "Spencer Venancio<br><span class='title-team'>with Sarit Bose and Aakrithi Ram · Advisor: Anna Woodard, PhD</span>"
+author: "Spencer Venancio<br><span class='title-team'>University of Wisconsin&ndash;Madison<br>Advisor: Anna Woodard, University of Chicago Data Science Institute</span>"
 format:
   revealjs:
     theme: [default, custom.scss]
@@ -48,9 +48,9 @@ Earlier prediction could guide less intensive therapy for patients likely to ach
 ::: {.notes}
 Neoadjuvant therapy is a treatment given before surgery, typically chemotherapy.
 At surgery, if no invasive cancer remains in the breast or the surrounding lymph
-nodes, this is called pCR. pCR is associated with improved outcomes for the
-patient. We ask whether modeling the vascular network as a graph improves pCR
-prediction over the same measurements without those connections. Earlier
+nodes, this is called pCR. pCR is associated with improved outcomes. We ask
+whether modeling the vascular network as a graph improves pCR prediction over
+the same measurements without those connections. Earlier
 prediction could guide less intensive therapy for patients likely to achieve pCR
 and alternative therapy for those unlikely to do so.
 :::
@@ -73,7 +73,7 @@ Blood flows through a predictable, well-structured network.
 ::: {.result-card .caution}
 <strong>Tumor vessels: dense, tortuous, leaky.</strong>
 
-Tumors stimulate abnormal vessel growth as they grow. Structure may reflect how aggressive a tumor is.
+Tumors stimulate abnormal vessel growth as they grow. Structure may reflect tumor biology and treatment sensitivity.
 :::
 :::
 
@@ -84,12 +84,11 @@ Vessel diagrams from *Nature Medicine*, Jain RK, "Molecular regulation of vessel
 :::
 
 ::: {.notes}
-But why might we expect there to be signal in the vascular networks? Well, blood
-vessels in healthy tissue are organized, and blood flows through them
-efficiently. Meanwhile tumors recruit nearby vessels and stimulate new growth,
-which is often dense, tortuous, and leaky. That structure, and the way contrast
-flows through it, may reflect how aggressive the tumor is — which is why we
-expect it to help predict pCR.
+Why might vessels carry predictive signal? Well, healthy blood vessels are
+organized, and blood flows through them efficiently. Meanwhile tumors stimulate
+new growth, which is often dense, tortuous, and leaky. That structure, and the
+way contrast flows through it, may reflect how aggressive the tumor is — which
+is why we expect it to help predict pCR.
 :::
 
 ## Ultrafast MRI captures images every few seconds as contrast enters tissue
@@ -107,25 +106,23 @@ Curves are from different patients and are shown only to compare temporal sampli
 :::
 
 ::: {.notes}
-Our data came from the University of Chicago: ultrafast breast MRI. Ultrafast MRI
-has far higher temporal resolution than traditional DCE-MRI — it produces 3D
-volumes every four seconds, compared to around two minutes.
+Dynamic contrast-enhanced MRI, or DCE-MRI, repeatedly images the breast before
+and after that contrast injection. As contrast reaches vessels and tissue, their
+MRI signal changes over time.
 
-In both, a metal-based dye called contrast is injected into the blood, which is
-what makes the vessels light up. This plot follows one voxel — the 3D "pixel"
-that makes up an MRI volume — inside a vessel, in two different patients, and
-shows how much brighter that spot gets as contrast arrives.
+Conventional DCE-MRI samples this enhancement relatively slowly: roughly every
+two minutes in the protocol shown here. Ultrafast DCE-MRI acquires a 3D volume
+every few seconds, allowing us to observe the early wash-in of contrast.
 
-Observe how the ultrafast curve resolves the wash-in, where the conventional scan
-connects a few dots across it. It is exactly this extra temporal detail that we
-expect to carry additional signal.
+The dots show when each protocol measures enhancement at a vessel location.
+Conventional DCE-MRI captures only a few measurements, while ultrafast DCE-MRI
+samples every few seconds and resolves early wash-in.
 
-We have pCR labels on 179 exams from 141 patients, and an additional 1,226
-unlabeled exams from a separate set of patients. For this reason, we pretrain on
-the unlabeled exams and fine-tune on the labeled ones.
+Our data contains 179 exams from 141 patients, and another 1,226 exams without
+treatment-response labels.
 
-One bit of nuance, however: the number of frames varies across exams, from 13 to
-the 24 depicted in the plot. I will come back to why that matters.
+The acquisition protocols aren't uniform: exams contain 13 to 24 frames, and
+their cadence and duration also vary. I'll return to why that matters.
 :::
 
 ## The GNN first predicts later MRI frames, then predicts treatment response
@@ -133,14 +130,12 @@ the 24 depicted in the plot. I will come back to why that matters.
 ![](figures/arch5.svg){.nostretch width="100%" fig-align="center"}
 
 ::: {.notes}
-So, walking briefly through the pipeline: the inputs are the raw ultrafast
-volumes, their frame timings, and these centerline networks — one-voxel-wide
-tracings of the vascular structure. Producing those is its own open research
-problem, which my colleague Sarit Bose works on; my work starts here. I turn each
-centerline into a graph: vessel locations are nodes, and connected locations
-share an edge. The green box is the heart of the GNN: a graph convolution,
-intended to capture spatial information, and a recurrent unit, intended to
-capture temporal structure. I built and trained the models in PyTorch Geometric.
+So, walking briefly through the pipeline: The inputs are ultrafast images, frame
+timings, and one-voxel-wide vessel centerlines. I convert the centerlines into
+graphs: vessel locations become nodes, and connected locations share an edge. The
+green box is the heart of the GNN: a graph convolution, intended to capture
+spatial information, and a recurrent unit, intended to capture temporal
+structure.
 
 In pretraining, the model learns to predict future enhancement at connected
 vessel nodes. The target comes from the scan itself, so it needs no human labels
@@ -214,10 +209,11 @@ patients.
 ::: {.notes}
 So in conclusion, I built a graph neural network to predict treatment response,
 and pretraining it to forecast contrast in future frames improved it over random
-initialization. The graph-free model stayed close to chance, which suggests the
-vessel connections are what let the model use those dynamics. But the possible
-confounding with scan timing means reading these results with caution — and
-separating the two is the next step.
+initialization. In this analysis, the pretrained GNN outperformed the matched
+model that ignored vessel connections, suggesting that vascular connectivity may
+add information beyond each vessel location's enhancement curve alone. However,
+because scan timing also predicted outcome, we can't yet attribute that signal
+specifically to vascular biology — and separating the two is the next step.
 :::
 
 ## Thank you
@@ -230,11 +226,5 @@ separating the two is the next step.
 <div class="plain-callout">Thanks to <strong>Zhen Ren</strong>, <strong>Milica Medved</strong>, and <strong>Greg Karczmar</strong> for feedback and MRI-physics expertise; Fred Howard for the development cohort; and Bella Summe, Julia Luo, José Cardona Arias, and Rebecca Wu for earlier vessel-pipeline development.</div>
 
 ::: {.notes}
-Thank you for listening. Open source is a pillar of this project, so our code is
-publicly available on GitHub.
-
-I would like to acknowledge Zhen Ren, Milica Medved, and Greg Karczmar for their
-feedback and MRI-physics expertise, and Fred Howard for the development cohort.
-This project was built on top of previous students' code in the Vanguard research
-repository.
+Thank you for listening.
 :::

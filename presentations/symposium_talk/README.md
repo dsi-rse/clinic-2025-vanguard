@@ -24,6 +24,22 @@ The central reported comparisons, matching the final `symposium_poster`, are:
 
 The forecast-pretraining comparison is a completed result, not planned work.
 
+## PowerPoint copy
+
+`make_pptx.py` writes `slides.pptx` for venues that require PowerPoint: each
+slide is a full-bleed image of the corresponding `slides.pdf` page at 192 dpi,
+carrying its speaker notes. The deck therefore looks identical and nothing on a
+slide is editable. It needs `python-pptx`, which is not in `environment.yml`:
+
+```bash
+pip install python-pptx
+micromamba run -n vanguard python make_pptx.py
+```
+
+Rendering `slides.qmd` straight to `pptx` is not a substitute -- pandoc's pptx
+writer drops the CSS and the raw-HTML card grids, splits headings away from
+their figures (8 slides become 10), and loses figures.
+
 ## Architecture figure (`figures/arch5.svg`)
 
 This figure is drawn outside the repo and checked in only as an SVG export, with
