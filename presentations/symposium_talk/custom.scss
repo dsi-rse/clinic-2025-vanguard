@@ -33,13 +33,14 @@ $body-bg: #ffffff;
 }
 
 .reveal h2 {
-  border-bottom: 4px solid var(--gold);
-  color: var(--maroon);
-  font-size: 1.7em;
-  letter-spacing: -0.025em;
+  border-bottom: 1px solid var(--ink);
+  color: var(--ink);
+  font-size: 1.6em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   line-height: 1.08;
   margin: 0 0 28px;
-  padding-bottom: 10px;
+  padding-bottom: 12px;
   text-transform: none;
 }
 
@@ -59,18 +60,15 @@ $body-bg: #ffffff;
 }
 
 #title-slide {
-  background:
-    radial-gradient(circle at 84% 22%, rgba(255,255,255,0.16) 0 8px, transparent 9px),
-    radial-gradient(circle at 74% 38%, rgba(255,255,255,0.12) 0 12px, transparent 13px),
-    radial-gradient(circle at 90% 54%, rgba(255,255,255,0.10) 0 16px, transparent 17px),
-    linear-gradient(135deg, #4d0000 0%, #800000 62%, #9b1b30 100%);
-  color: #fff;
+  background: #fff;
+  border-top: 10px solid var(--maroon);
+  color: var(--ink);
   height: 100%;
-  padding: 120px 95px 100px !important;
+  padding: 130px 95px 100px !important;
 }
 
 #title-slide h1 {
-  color: #fff;
+  color: var(--maroon);
   font-size: 2.1em;
   letter-spacing: -0.035em;
   line-height: 1.03;
@@ -79,21 +77,21 @@ $body-bg: #ffffff;
 }
 
 #title-slide .subtitle {
-  color: #f3d36c;
+  color: var(--ink);
   font-size: 1.18em;
-  font-weight: 600;
+  font-weight: 500;
   margin-top: 22px;
 }
 
 #title-slide .author {
-  color: #fff;
+  color: var(--ink);
   font-size: 1em;
   font-weight: 700;
   margin-top: 60px;
 }
 
 #title-slide .title-team {
-  color: rgba(255,255,255,0.85);
+  color: var(--muted);
   display: inline-block;
   font-size: 0.62em;
   font-weight: 400;
@@ -115,20 +113,20 @@ $body-bg: #ffffff;
 .story-card,
 .remember-card,
 .result-card {
-  background: var(--soft);
-  border-radius: 18px;
+  background: transparent;
+  border-radius: 0;
   box-sizing: border-box;
-  padding: 26px 28px;
+  padding: 20px 0 20px 22px;
 }
 
 .story-card {
-  border-top: 7px solid #9b9b9b;
+  border-left: 2px solid #9b9b9b;
   min-height: 225px;
 }
 
 .story-card.feature-card {
-  background: var(--maroon-light);
-  border-top-color: var(--maroon);
+  background: transparent;
+  border-left-color: var(--maroon);
 }
 
 .card-kicker {
@@ -156,12 +154,12 @@ $body-bg: #ffffff;
 .takeaway-banner,
 .question-banner,
 .closing-line {
-  background: var(--maroon-light);
-  border-left: 8px solid var(--maroon);
-  border-radius: 6px;
+  background: transparent;
+  border-left: 2px solid var(--maroon);
+  border-radius: 0;
   font-size: 0.86em;
   margin-top: 28px;
-  padding: 14px 22px;
+  padding: 8px 22px;
 }
 
 .lead-line {
@@ -232,13 +230,14 @@ $body-bg: #ffffff;
 }
 
 .result-card {
-  border-top: 6px solid #9b9b9b;
+  border-left: 2px solid #9b9b9b;
+  border-top: 0;
   font-size: 0.7em;
   min-height: 145px;
 }
 
 .result-card.caution {
-  border-top-color: var(--gold);
+  border-left-color: var(--gold);
 }
 
 .result-card p {
@@ -260,7 +259,7 @@ $body-bg: #ffffff;
 
 #can-vessel-networks-help-personalize-treatment .story-card {
   min-height: 0;
-  padding: 16px 20px;
+  padding: 12px 0 12px 20px;
 }
 
 // Slide-scoped overrides (targeting reveal's generated slide id) so the vessel
@@ -278,14 +277,14 @@ $body-bg: #ffffff;
 // instead of .result-card's green/gold, so the two card-grid slides read
 // as one visual system.
 #tumors-build-a-messier-blood-supply .result-card {
-  border-top-color: #9b9b9b;
+  border-left-color: #9b9b9b;
   font-size: 1em;
-  padding: 14px 20px;
+  padding: 14px 0 14px 20px;
 }
 
 #tumors-build-a-messier-blood-supply .result-card.caution {
-  background: var(--maroon-light);
-  border-top-color: var(--maroon);
+  background: transparent;
+  border-left-color: var(--maroon);
 }
 
 #tumors-build-a-messier-blood-supply .result-card p {
@@ -443,32 +442,20 @@ html.print-pdf .reveal .slides section {
   padding: 34px 54px var(--deck-bottom-safe) !important;
 }
 
-// The gradient is set directly on #title-slide (not just the .pdf-page
-// wrapper below) because :has() is unsupported in the Chromium 91 that
-// Quarto's bundled `quarto tools install chromium` ships -- without this,
-// #title-slide's white text renders invisible on a white page in that PDF
-// export path, even though it looks fine in any modern browser.
+// Editorial theme uses dark text on white, so the old gradient-forcing
+// workaround (needed for white-on-white legibility) isn't required here --
+// but the height/position fix for Chromium 91's print pagination bug still
+// is, so that's kept.
 html.print-pdf .reveal .slides #title-slide {
-  background:
-    radial-gradient(circle at 84% 22%, rgba(255,255,255,0.16) 0 8px, transparent 9px),
-    radial-gradient(circle at 74% 38%, rgba(255,255,255,0.12) 0 12px, transparent 13px),
-    radial-gradient(circle at 90% 54%, rgba(255,255,255,0.10) 0 16px, transparent 17px),
-    linear-gradient(135deg, #4d0000 0%, #800000 62%, #9b1b30 100%) !important;
-  padding: 120px 95px 100px !important;
+  background: #fff !important;
+  border-top: 10px solid var(--maroon) !important;
+  padding: 130px 95px 100px !important;
   height: auto !important;
   min-height: 100% !important;
   top: 0 !important;
 }
 
-// :has() version for browsers that support it, plus a :first-of-type
-// fallback for Chromium 91 (the title slide is always the first printed
-// page) so the gradient still covers the full .pdf-page box, not just the
-// #title-slide section within it.
 html.print-pdf .pdf-page:has(#title-slide),
 html.print-pdf .pdf-page:first-of-type {
-  background:
-    radial-gradient(circle at 84% 22%, rgba(255,255,255,0.16) 0 8px, transparent 9px),
-    radial-gradient(circle at 74% 38%, rgba(255,255,255,0.12) 0 12px, transparent 13px),
-    radial-gradient(circle at 90% 54%, rgba(255,255,255,0.10) 0 16px, transparent 17px),
-    linear-gradient(135deg, #4d0000 0%, #800000 62%, #9b1b30 100%) !important;
+  background: #fff !important;
 }
