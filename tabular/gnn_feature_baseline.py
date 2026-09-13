@@ -83,7 +83,27 @@ def _build_model(model_name: str, seed: int) -> Pipeline:
                 eval_metric="logloss",
             ),
         )
+    if model_name == "elastic_net":
+        # penalty/solver/l1_ratio/C match this repo's elastic-net convention in
+        # tabular/models.py's build_model_pipeline (C=1.0, l1_ratio=0.5,
+        # max_iter=3000, class_weight="balanced" for the pCR class imbalance).
+        return make_pipeline(
+            SimpleImputer(strategy="mean"),
+            StandardScaler(),
+            LogisticRegression(
+                penalty="elasticnet",
+                solver="saga",
+                l1_ratio=0.5,
+                C=1.0,
+                max_iter=3000,
+                class_weight="balanced",
+                random_state=seed,
+            ),
+        )
     raise ValueError(f"Unknown model_name: {model_name!r}")
+
+
+MODEL_NAMES = ("logistic_regression", "xgboost", "elastic_net")
 
 
 def _parse_args() -> argparse.Namespace:
@@ -108,6 +128,9 @@ def load_dataset_from_config(
         root=dp.gnn_centerline_root,
         labels_path=dp.gnn_labels_path,
         dce_root=dp.gnn_dce_root,
+        cases=list(dp.gnn_cases) if dp.gnn_cases else None,
+        id_column=dp.gnn_id_column,
+        label_column=dp.gnn_label_column,
         cache_dir=dp.gnn_cache_dir,
         node_mode=str(mp.gnn_node_mode),
         node_features=node_features,
@@ -154,17 +177,22 @@ def summarize_graph(data: Data, node_features: tuple[str, ...]) -> dict[str, flo
     feature is summarized over all nodes.
     """
     x = data.x.numpy()
-    tte_idx = node_features.index("time_to_enhancement")
+    tte_idx = (
+        node_features.index("time_to_enhancement")
+        if "time_to_enhancement" in node_features
+        else None
+    )
     row: dict[str, float] = {}
     for i, name in enumerate(node_features):
         column = x[:, i]
-        if i == tte_idx:
+        if tte_idx is not None and i == tte_idx:
             column = column[column != TTE_NO_ARRIVAL_SENTINEL]
         row.update(_summary_stats(column, name))
-    tte_column = x[:, tte_idx]
-    row["tte_no_arrival_fraction"] = float(
-        np.mean(tte_column == TTE_NO_ARRIVAL_SENTINEL)
-    )
+    if tte_idx is not None:
+        tte_column = x[:, tte_idx]
+        row["tte_no_arrival_fraction"] = float(
+            np.mean(tte_column == TTE_NO_ARRIVAL_SENTINEL)
+        )
     row["num_nodes"] = float(data.num_nodes)
     row["num_edges"] = int(data.edge_index.shape[1])
     row["case_id"] = str(data.case_id)
@@ -181,9 +209,13 @@ def build_feature_table(
     return pd.DataFrame(rows)
 
 
-def add_folds(feature_table: pd.DataFrame, labels_path: Path) -> pd.DataFrame:
+def add_folds(
+    feature_table: pd.DataFrame, labels_path: Path, id_column: str = "case_id"
+) -> pd.DataFrame:
     """Join in each case's frozen fold assignment."""
-    folds = pd.read_csv(labels_path)[["case_id", "fold"]]
+    folds = pd.read_csv(labels_path)[[id_column, "fold"]]
+    if id_column != "case_id":
+        folds = folds.rename(columns={id_column: "case_id"})
     merged = feature_table.merge(folds, on="case_id", how="left")
     if merged["fold"].isna().any():
         missing = merged.loc[merged["fold"].isna(), "case_id"].tolist()
@@ -269,7 +301,11 @@ def main() -> None:
     print(f"Loaded {len(dataset)} graphs from {config.data_paths.gnn_cache_dir}")
 
     feature_table = build_feature_table(dataset, node_features)
-    feature_table = add_folds(feature_table, Path(config.data_paths.gnn_labels_path))
+    feature_table = add_folds(
+        feature_table,
+        Path(config.data_paths.gnn_labels_path),
+        id_column=config.data_paths.gnn_id_column,
+    )
     feature_cols = [
         c
         for c in feature_table.columns
@@ -280,7 +316,7 @@ def main() -> None:
     feature_table.to_csv(args.out_dir / "tabular_baseline_features.csv", index=False)
 
     all_rows: list[dict[str, object]] = []
-    for model_name in ("logistic_regression", "xgboost"):
+    for model_name in MODEL_NAMES:
         for seed in _SEEDS:
             all_rows.extend(
                 run_cv(feature_table, feature_cols, model_name=model_name, seed=seed)
@@ -304,9 +340,10 @@ def main() -> None:
     # over all cases plus a bootstrap CI on it (Phase 0.3).
     y = feature_table["pcr"].to_numpy()
     pooled: list[dict[str, object]] = []
+    oof_columns: dict[str, np.ndarray] = {}
     print()
     print("=== Pooled OOF AUC over all cases (headline metric) ===")
-    for model_name in ("logistic_regression", "xgboost"):
+    for model_name in MODEL_NAMES:
         per_seed = np.stack(
             [
                 oof_predictions(
@@ -317,6 +354,7 @@ def main() -> None:
         )
         seed_pooled = [float(roc_auc_score(y, per_seed[i])) for i in range(len(_SEEDS))]
         mean_oof = per_seed.mean(axis=0)
+        oof_columns[model_name] = mean_oof
         auc = float(roc_auc_score(y, mean_oof))
         ci_lo, ci_hi = bootstrap_auc_ci(y, mean_oof)
         pooled.append(
@@ -340,6 +378,17 @@ def main() -> None:
         json.dumps({"per_fold": all_rows, "pooled_oof": pooled}, indent=2)
     )
     print(f"\nWrote {out_path}")
+
+    # Per-case seed-mean OOF probabilities, one column per model. Kept
+    # separately from tabular_baseline_results.json (which only has the
+    # pooled scalar AUC) so a downstream script can pair cases across two
+    # arms (e.g. HR-only vs complemented) for a paired bootstrap delta.
+    oof_table = feature_table[["case_id", "dataset", "fold", "pcr"]].copy()
+    for model_name, values in oof_columns.items():
+        oof_table[f"oof_prob_{model_name}"] = values
+    oof_path = args.out_dir / "oof_predictions.csv"
+    oof_table.to_csv(oof_path, index=False)
+    print(f"Wrote {oof_path}")
 
 
 if __name__ == "__main__":
