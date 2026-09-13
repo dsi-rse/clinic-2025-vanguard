@@ -14,7 +14,8 @@ this script discovers instances itself: it reads every candidate file's header
 SeriesInstanceUID match the case manifest. ``TemporalPositionIdentifier`` and
 ``InstanceNumber`` are taken from the header; an image instance without a
 temporal position fails the exam (listed in ``stage_failures``) rather than
-being guessed. Raw Data Storage objects are excluded and logged, as in v5.
+being guessed. Known non-image objects (Raw Data Storage and Philips private
+series-data/spectrum/examcard objects) are excluded and logged.
 
 Commands:
     prepare-selection  Write ``staged_dicom_selection.csv``: one row per
@@ -38,7 +39,15 @@ from pathlib import Path
 
 import pandas as pd
 
-RAW_DATA_STORAGE_SOP_CLASS_UID = "1.2.840.10008.5.1.4.1.1.66"
+# Non-image objects that Philips scanners bundle into a dynamic series' own
+# SeriesInstanceUID. None carries PixelData or a temporal position, so they are
+# not phases; they are excluded and logged rather than forced into one.
+NON_IMAGE_SOP_CLASS_UIDS = {
+    "1.2.840.10008.5.1.4.1.1.66": "raw_data_storage",
+    "1.3.46.670589.11.0.0.12.1": "philips_private_mr_spectrum_storage",
+    "1.3.46.670589.11.0.0.12.2": "philips_private_mr_series_data_storage",
+    "1.3.46.670589.11.0.0.12.4": "philips_private_mr_examcard_storage",
+}
 ROLE_BY_MANIFEST_ROLE = {"high_resolution": "hr", "ultrafast": "ufast"}
 
 SELECTION_COLUMNS = [
@@ -197,12 +206,14 @@ def _matching_instances(
             raise ValueError(
                 f"{member} in {path}: matching series but no SOPInstanceUID"
             )
-        if str(getattr(header, "SOPClassUID", "")) == RAW_DATA_STORAGE_SOP_CLASS_UID:
+        sop_class = str(getattr(header, "SOPClassUID", ""))
+        if sop_class in NON_IMAGE_SOP_CLASS_UIDS:
             excluded.append(
                 {
                     "sop_instance_uid": sop_uid,
+                    "sop_class_uid": sop_class,
                     "member": member,
-                    "reason": "raw_data_storage_sop_class",
+                    "reason": f"non_image:{NON_IMAGE_SOP_CLASS_UIDS[sop_class]}",
                 }
             )
             continue
