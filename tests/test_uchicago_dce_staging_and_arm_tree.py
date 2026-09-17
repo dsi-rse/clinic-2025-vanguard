@@ -17,6 +17,7 @@ from pydicom.uid import ExplicitVRLittleEndian, generate_uid
 from analysis.build_skeleton_arm_tree import build_tree
 from preprocessing.stage_uchicago_dce_dicom import (
     _matching_instances,
+    location_variants,
     stage_exam,
 )
 
@@ -201,3 +202,91 @@ def test_build_tree_refuses_mixed_arms(tmp_path: Path) -> None:
     _skeleton_dir(root, "ds", "e2", with_hr_only=False)
     with pytest.raises(FileNotFoundError, match="mixed-arm"):
         build_tree(root, "hr_only", tmp_path / "hr_only")
+
+
+def test_location_variants_finds_zipped_replacement_of_a_directory(
+    tmp_path: Path,
+) -> None:
+    """A directory listed at submit time that became dicoms.zip is still found."""
+    container = _write_container(tmp_path)
+    archive = container / "dicoms.zip"
+    with zipfile.ZipFile(archive, "w") as zf:
+        for f in container.glob("*.dcm"):
+            zf.write(f, f.name)
+    for f in container.glob("*.dcm"):
+        f.unlink()
+    variants = location_variants("directory", str(container))
+    assert variants[0] == ("directory", str(container))
+    assert ("zip", str(archive)) in variants
+    kept, _, _ = _matching_instances("zip", str(archive), STUDY, SERIES_HR)
+    assert len(kept) == N_PHASES
+    assert location_variants("directory", str(tmp_path / "gone")) == []
+
+
+def test_stage_exam_falls_back_to_live_manifest_locations(tmp_path: Path) -> None:
+    """When the selection's path is gone, the live manifest's zip is used and recorded."""
+    container = _write_container(tmp_path)
+    moved = tmp_path / "archives" / "dicoms.zip"
+    moved.parent.mkdir()
+    with zipfile.ZipFile(moved, "w") as zf:
+        for f in container.glob("*.dcm"):
+            zf.write(f, f.name)
+    for f in container.iterdir():
+        f.unlink()
+    container.rmdir()
+    case_manifest = tmp_path / "case_manifest.csv"
+    pd.DataFrame(
+        [
+            {
+                "exam_id": "exam_a",
+                "dataset": "ds",
+                "study_instance_uid": STUDY,
+                "hr_series_instance_uid": SERIES_HR,
+                "ufast_series_instance_uid": SERIES_UF,
+                "ufast_baseline_frame_count": 1,
+            }
+        ]
+    ).to_csv(case_manifest, index=False)
+    selection = tmp_path / "selection.csv"
+    pd.DataFrame(
+        [
+            {
+                "exam_id": "exam_a",
+                "dataset": "ds",
+                "series_role": role,
+                "study_instance_uid": STUDY,
+                "series_instance_uid": uid,
+                "location_rank": 0,
+                "location_kind": "directory",
+                "location_path": str(container),
+            }
+            for role, uid in (("hr", SERIES_HR), ("ufast", SERIES_UF))
+        ]
+    ).to_csv(selection, index=False)
+    live = tmp_path / "current_manifest.csv"
+    locations = {
+        "series": [
+            {
+                "series_instance_uid": uid,
+                "status": "resolved",
+                "locations": [
+                    {"kind": "zip", "path": str(moved), "study_instance_uid": STUDY}
+                ],
+            }
+            for uid in (SERIES_HR, SERIES_UF)
+        ]
+    }
+    pd.DataFrame(
+        [{"exam_key": "exam_a", "original_dicom_locations_json": json.dumps(locations)}]
+    ).to_csv(live, index=False)
+    destination = tmp_path / "staged"
+    stage_exam(case_manifest, selection, destination, 0, live_manifest=live)
+    provenance = json.loads(
+        (destination / "provenance_shards" / "ds" / "exam_a.json").read_text()
+    )
+    used = provenance["series"][SERIES_HR]["location_used"]
+    assert used["source"] == "live_manifest"
+    assert used["kind"] == "zip"
+    assert (
+        provenance["series"][SERIES_HR]["locations_skipped"][0]["reason"] == "missing"
+    )

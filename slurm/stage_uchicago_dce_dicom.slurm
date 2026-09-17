@@ -14,6 +14,7 @@ umask 0007
 : "${CASE_MANIFEST:?Set CASE_MANIFEST to the uchicago_dce case manifest}"
 : "${SELECTION:?Set SELECTION to the prepared DICOM location selection (prepare-selection output)}"
 : "${DESTINATION_ROOT:?Set DESTINATION_ROOT to the staging directory}"
+: "${LIVE_MANIFEST:?Set LIVE_MANIFEST to the canonical current_manifest.csv (fallback for moved sources)}"
 
 VANGUARD_PYTHON="${VANGUARD_PYTHON:-${CONDA_PREFIX:?activate the vanguard env or set VANGUARD_PYTHON}/bin/python}"
 
@@ -24,4 +25,5 @@ echo "[python] ${VANGUARD_PYTHON}"
   --case-manifest "${CASE_MANIFEST}" \
   --selection "${SELECTION}" \
   --destination "${DESTINATION_ROOT}" \
+  --manifest "${LIVE_MANIFEST}" \
   --index "${SLURM_ARRAY_TASK_ID}"

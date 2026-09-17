@@ -157,6 +157,53 @@ def prepare_selection(
     )
 
 
+def location_variants(kind: str, path: str) -> list[tuple[str, str]]:
+    """The listed location plus its zipped/unzipped alternates, existing ones only.
+
+    Anna compresses source directories in place over time, so a location
+    listed as a directory when a job is submitted may be a ``dicoms.zip``
+    (or ``<dir>.zip``) by the time it runs, and vice versa. Every candidate
+    that exists is returned, listed location first.
+    """
+    base = Path(path)
+    candidates = [(kind, base)]
+    if kind == "directory":
+        candidates += [("zip", base / "dicoms.zip"), ("zip", base.with_suffix(".zip"))]
+    elif kind == "zip":
+        candidates += [
+            (
+                "directory",
+                base.parent if base.name == "dicoms.zip" else base.with_suffix(""),
+            )
+        ]
+    return [
+        (k, str(c))
+        for k, c in candidates
+        if (c.is_dir() if k == "directory" else c.is_file())
+    ]
+
+
+def _live_locations(
+    manifest_path: Path, exam_id: str, series_uid: str
+) -> list[dict[str, str]]:
+    """Locations for one series from the live manifest, read for one exam only."""
+    manifest = pd.read_csv(
+        manifest_path,
+        usecols=["exam_key", "original_dicom_locations_json"],
+        dtype=str,
+    )
+    row = manifest.loc[manifest["exam_key"] == exam_id]
+    if len(row) != 1:
+        raise KeyError(
+            f"{exam_id}: expected one row in {manifest_path}, got {len(row)}"
+        )
+    payload = json.loads(row.iloc[0]["original_dicom_locations_json"])
+    for series in payload["series"]:
+        if series["series_instance_uid"] == series_uid:
+            return list(series["locations"])
+    raise KeyError(f"{exam_id}: series {series_uid} not in live manifest")
+
+
 def _iter_container(kind: str, path: str) -> Iterator[tuple[str, bytes]]:
     """Yield (member name, bytes) for every regular file in a directory or zip."""
     if kind == "directory":
@@ -240,9 +287,18 @@ def _matching_instances(
 
 
 def stage_exam(
-    case_manifest_path: Path, selection_path: Path, destination: Path, index: int
+    case_manifest_path: Path,
+    selection_path: Path,
+    destination: Path,
+    index: int,
+    live_manifest: Path | None = None,
 ) -> None:
-    """Stage one exam selected by its stable sorted array index."""
+    """Stage one exam selected by its stable sorted array index.
+
+    Locations come from the prepared selection; if none of them (or their
+    zipped/unzipped variants) exists any more and ``live_manifest`` is given,
+    the exam's current locations are re-read from it and tried as well.
+    """
     cases = _load_cases(case_manifest_path)
     if index < 0 or index >= len(cases):
         raise IndexError(f"array index {index} outside [0, {len(cases) - 1}]")
@@ -294,29 +350,66 @@ def stage_exam(
             excluded: list[dict[str, object]] = []
             used: dict[str, object] | None = None
             skipped: list[dict[str, object]] = []
-            for location in locations.itertuples(index=False):
-                kept, excluded, scanned = _matching_instances(
-                    location.location_kind,
-                    location.location_path,
-                    case["study_instance_uid"],
-                    series_uid,
+            listed = [
+                (
+                    loc.location_kind,
+                    loc.location_path,
+                    "selection",
+                    int(loc.location_rank),
                 )
-                if kept:
-                    used = {
-                        "kind": location.location_kind,
-                        "path": location.location_path,
-                        "rank": int(location.location_rank),
-                        "files_scanned": scanned,
-                    }
+                for loc in locations.itertuples(index=False)
+            ]
+            if live_manifest is not None:
+                listed += [
+                    (loc["kind"], loc["path"], "live_manifest", rank)
+                    for rank, loc in enumerate(
+                        _live_locations(live_manifest, exam_id, series_uid)
+                    )
+                ]
+            tried: set[str] = set()
+            for kind, path, source, rank in listed:
+                variants = location_variants(kind, path)
+                if not variants:
+                    skipped.append(
+                        {
+                            "kind": kind,
+                            "path": path,
+                            "source": source,
+                            "reason": "missing",
+                        }
+                    )
+                for variant_kind, variant_path in variants:
+                    if variant_path in tried:
+                        continue
+                    tried.add(variant_path)
+                    kept, excluded, scanned = _matching_instances(
+                        variant_kind,
+                        variant_path,
+                        case["study_instance_uid"],
+                        series_uid,
+                    )
+                    if kept:
+                        used = {
+                            "kind": variant_kind,
+                            "path": variant_path,
+                            "listed_kind": kind,
+                            "listed_path": path,
+                            "source": source,
+                            "rank": rank,
+                            "files_scanned": scanned,
+                        }
+                        break
+                    skipped.append(
+                        {
+                            "kind": variant_kind,
+                            "path": variant_path,
+                            "source": source,
+                            "files_scanned": scanned,
+                            "reason": "no_matching_image_instances",
+                        }
+                    )
+                if used is not None:
                     break
-                skipped.append(
-                    {
-                        "kind": location.location_kind,
-                        "path": location.location_path,
-                        "files_scanned": scanned,
-                        "reason": "no_matching_image_instances",
-                    }
-                )
             if used is None:
                 raise ValueError(
                     f"{exam_id}: no location yielded instances for {role} "
@@ -474,7 +567,14 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=("prepare-selection", "stage", "finalize"))
     parser.add_argument("--case-manifest", type=Path, required=True)
-    parser.add_argument("--manifest", type=Path, help="canonical current_manifest.csv")
+    parser.add_argument(
+        "--manifest",
+        type=Path,
+        help=(
+            "canonical current_manifest.csv; required for prepare-selection, and "
+            "for stage it is the live fallback when listed locations have moved"
+        ),
+    )
     parser.add_argument("--selection", type=Path, required=True)
     parser.add_argument("--destination", type=Path, required=True)
     parser.add_argument("--index", type=int)
@@ -493,7 +593,13 @@ def main() -> None:
         index = args.index
         if index is None:
             index = int(os.environ["SLURM_ARRAY_TASK_ID"])
-        stage_exam(args.case_manifest, args.selection, args.destination, index)
+        stage_exam(
+            args.case_manifest,
+            args.selection,
+            args.destination,
+            index,
+            live_manifest=args.manifest,
+        )
     else:
         finalize(args.case_manifest, args.destination, args.inventory_path)
 
