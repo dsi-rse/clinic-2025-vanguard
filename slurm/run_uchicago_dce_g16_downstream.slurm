@@ -19,13 +19,14 @@ REPO="${REPO_ROOT:-/ess/home/home1/t-9sbose/vanguard}"
 G="${COHORT_ROOT:-/gpfs/data/karczmar-lab/workspaces/saritbose/uchicago_dce_g16}"
 SC="${SCRATCH_ROOT:-/ess/scratch/scratch1/t-9sbose/uchicago_dce_g16}"
 RUN="${RUN_NAME:-$(date +%Y%m%d)}"
+CASE_MANIFEST="${CASE_MANIFEST:-${G}/staging/case_manifest.csv}"
 OUT="${G}/results/${RUN}"
 cd "${REPO}"
 mkdir -p "${OUT}" logs/slurm
 echo "host=$(hostname) commit=$(git rev-parse HEAD) run=${RUN}"
 
 "${PY}" scripts/summarize_preprocessing_run.py \
-  --case-manifest "${G}/staging/case_manifest.csv" \
+  --case-manifest "${CASE_MANIFEST}" \
   --output-root "${SC}/preprocessing_out" \
   --out-dir "${OUT}/preprocessing_summary"
 
