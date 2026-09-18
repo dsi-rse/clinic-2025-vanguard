@@ -144,8 +144,10 @@ def size_weighted_within(per_dataset: pd.DataFrame) -> dict[str, Any]:
     }
 
 
-def lodo(features: pd.DataFrame, seeds: tuple[int, ...]) -> tuple[pd.DataFrame, dict]:
-    """Refit the elastic net holding out each dataset in turn."""
+def lodo(
+    features: pd.DataFrame, seeds: tuple[int, ...], model_name: str
+) -> tuple[pd.DataFrame, dict]:
+    """Refit ``model_name`` (a ``tabular.gnn_feature_baseline`` model) holding out each dataset."""
     feature_cols = [
         c
         for c in features.columns
@@ -160,7 +162,7 @@ def lodo(features: pd.DataFrame, seeds: tuple[int, ...]) -> tuple[pd.DataFrame, 
         test = datasets == dataset
         per_seed = []
         for seed in seeds:
-            model = _build_model("elastic_net", seed)
+            model = _build_model(model_name, seed)
             model.fit(x[~test], y[~test])
             per_seed.append(model.predict_proba(x[test])[:, 1])
         prob = np.mean(per_seed, axis=0)
@@ -180,6 +182,7 @@ def lodo(features: pd.DataFrame, seeds: tuple[int, ...]) -> tuple[pd.DataFrame, 
     scored_datasets = set(table.dropna(subset=["auroc"])["held_out"])
     scorable = np.isin(datasets, list(scored_datasets))
     summary = {
+        "model": model_name,
         "n_features": len(feature_cols),
         "pooled_auroc_two_class_datasets": float(
             roc_auc_score(y[scorable], held_out_prob[scorable])
@@ -200,6 +203,7 @@ def evaluate_arm(
     *,
     subset_label: str,
     case_filter: pd.Series | None,
+    lodo_model: str,
 ) -> tuple[dict[str, Any], pd.DataFrame, pd.DataFrame]:
     oof = pd.read_csv(arm_dir / "oof_predictions.csv")
     frame = oof[["case_id", model_column]].merge(labels, on="case_id", how="inner")
@@ -226,7 +230,7 @@ def evaluate_arm(
     features = features.drop(columns=["dataset", "pcr"], errors="ignore").merge(
         frame[["case_id", "dataset", "pcr"]], on="case_id"
     )
-    lodo_table, lodo_summary = lodo(features, LODO_SEEDS)
+    lodo_table, lodo_summary = lodo(features, LODO_SEEDS, lodo_model)
     lodo_table.insert(0, "arm", name)
     lodo_table.insert(1, "subset", subset_label)
 
@@ -288,6 +292,12 @@ def main() -> None:
     parser.add_argument("--labels", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--model-column", default="oof_prob_elastic_net")
+    parser.add_argument(
+        "--lodo-model",
+        default="elastic_net",
+        choices=("elastic_net", "logistic_regression", "xgboost"),
+        help="model refit for leave-one-dataset-out; match --model-column",
+    )
     args = parser.parse_args()
 
     labels = pd.read_csv(args.labels)
@@ -317,6 +327,7 @@ def main() -> None:
                 args.model_column,
                 subset_label=subset_label,
                 case_filter=case_filter,
+                lodo_model=args.lodo_model,
             )
             summaries.append(summary)
             per_ds_tables.append(per_ds)
@@ -377,6 +388,7 @@ def main() -> None:
                     "stratified_by_label": True,
                 },
                 "lodo_seeds": list(LODO_SEEDS),
+                "lodo_model": args.lodo_model,
                 "arms": summaries,
                 "paired_contrasts": contrasts,
             },
