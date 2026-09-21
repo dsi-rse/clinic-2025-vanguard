@@ -1,4 +1,4 @@
-"""Stress-test a pooled-OOF pCR AUROC before it is believed.
+r"""Stress-test a pooled-OOF pCR AUROC before it is believed.
 
 Given one arm's feature table (``tabular.gnn_feature_baseline`` output), the
 labels file (patient-grouped folds), and the EDA's per-target permutation
@@ -50,6 +50,7 @@ NON_FEATURE_COLUMNS = {"case_id", "dataset", "fold", "pcr"}
 SEEDS = (42, 142, 242)
 SCANNER_TARGETS = ("hr_manufacturer_model_name", "hr_software_major")
 MIN_STRATUM = 30
+N_CLASSES = 2
 XGB_GRID = [
     {"n_estimators": n, "max_depth": d, "learning_rate": lr}
     for n in (50, 100, 300)
@@ -187,7 +188,7 @@ def main() -> None:
     # 3. within-stratum refits
     within = []
     for stratum, group in table.groupby("stratum"):
-        if len(group) < MIN_STRATUM or group["pcr"].nunique() < 2:
+        if len(group) < MIN_STRATUM or group["pcr"].nunique() < N_CLASSES:
             continue
         idx = group.index.to_numpy()
         f_local = fold[idx]

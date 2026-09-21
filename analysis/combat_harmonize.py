@@ -1,4 +1,4 @@
-"""ComBat harmonisation of a tabular feature table across acquisition batches.
+r"""ComBat harmonisation of a tabular feature table across acquisition batches.
 
 Parametric empirical-Bayes ComBat (Johnson, Li & Rabinovic 2007, as used by
 neuroCombat) applied to one arm's ``tabular_baseline_features.csv``. The batch
@@ -35,6 +35,7 @@ import pandas as pd
 
 NON_FEATURE_COLUMNS = {"case_id", "dataset", "fold", "pcr"}
 MIN_BATCH_DEFAULT = 10
+EB_TOLERANCE = 1e-4
 
 
 def stratum_labels(
@@ -113,7 +114,7 @@ def _iterate_eb(
             np.abs(d_new - d_old).max() / d_old.max(),
         )
         g_old, d_old = g_new, d_new
-        if change < 1e-4:
+        if change < EB_TOLERANCE:
             break
     return g_old, d_old
 

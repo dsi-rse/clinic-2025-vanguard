@@ -1,4 +1,4 @@
-"""Fit the tabular pCR models from a feature CSV (no graph cache needed).
+r"""Fit the tabular pCR models from a feature CSV (no graph cache needed).
 
 ``tabular.gnn_feature_baseline`` builds its feature table from the graph cache
 and then fits logistic regression, XGBoost and the elastic net with pooled OOF

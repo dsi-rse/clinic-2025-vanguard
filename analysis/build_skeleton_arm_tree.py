@@ -1,4 +1,4 @@
-"""Build a per-arm centerline tree from one pipeline output root.
+r"""Build a per-arm centerline tree from one pipeline output root.
 
 ``preprocessing.pipeline`` writes three skeleton variants per exam under
 ``<output_root>/centerlines/<dataset>/<exam>/``:

@@ -104,6 +104,7 @@ DETECT_TARGETS = [
     "pcr",
 ]
 MIN_CLASS_SIZE = 5
+MIN_CLASSES = 2
 N_FOLDS = 5
 SEED = 42
 GREY = "#444444"
@@ -208,6 +209,7 @@ def build_joined_table(
 
 
 def feature_columns(table: pd.DataFrame, features: pd.DataFrame) -> list[str]:
+    """Non-constant feature columns of the arm's feature table."""
     return [
         c
         for c in features.columns
@@ -266,6 +268,7 @@ def census(table: pd.DataFrame, out_dir: Path) -> None:
 
 
 def feature_vs_numeric(table: pd.DataFrame, feats: list[str], out_dir: Path) -> None:
+    """Spearman correlation of every feature with each numeric acquisition parameter."""
     cols = [c for c in NUMERIC_METADATA if c in table and table[c].std(skipna=True) > 0]
     rho = pd.DataFrame(index=feats, columns=cols, dtype=float)
     pval = rho.copy()
@@ -289,6 +292,7 @@ def feature_vs_numeric(table: pd.DataFrame, feats: list[str], out_dir: Path) -> 
 def feature_vs_categorical(
     table: pd.DataFrame, feats: list[str], out_dir: Path
 ) -> None:
+    """ANOVA eta^2 of every feature across each categorical acquisition variable."""
     cols = [
         c
         for c in CATEGORICAL_METADATA
@@ -335,6 +339,7 @@ def _standardised(table: pd.DataFrame, feats: list[str]) -> np.ndarray:
 
 
 def pca_views(table: pd.DataFrame, feats: list[str], out_dir: Path) -> dict:
+    """PCA of the standardised features with PC1/PC2 scatters per colouring."""
     x = _standardised(table, feats)
     pca = PCA(n_components=min(10, len(feats)), random_state=SEED).fit(x)
     scores = pca.transform(x)
@@ -349,7 +354,10 @@ def pca_views(table: pd.DataFrame, feats: list[str], out_dir: Path) -> dict:
         "study_year_bucket",
         "pcr",
     ):
-        if colour_by not in table or len(table[colour_by].dropna().unique()) < 2:
+        if (
+            colour_by not in table
+            or len(table[colour_by].dropna().unique()) < MIN_CLASSES
+        ):
             continue
         groups = table[colour_by].astype("string").fillna("missing")
         eta[colour_by] = {
@@ -397,7 +405,7 @@ def batch_detectability(
         labels = table[target].astype("string").fillna("missing")
         counts = labels.value_counts()
         keep = labels.isin(counts.index[counts >= MIN_CLASS_SIZE]).to_numpy()
-        if len(labels[keep].unique()) < 2:
+        if len(labels[keep].unique()) < MIN_CLASSES:
             continue
         classes = sorted(labels[keep].unique())
         y = labels[keep].map({c: i for i, c in enumerate(classes)}).to_numpy(dtype=int)
@@ -478,6 +486,7 @@ def batch_detectability(
 
 
 def size_vs_fov(table: pd.DataFrame, out_dir: Path) -> None:
+    """Skeleton-size features against field of view, voxel volume and cadence."""
     pairs = [
         ("hr_fov_row_mm", "num_nodes"),
         ("hr_voxel_volume_mm3", "num_nodes"),
@@ -500,6 +509,7 @@ def size_vs_fov(table: pd.DataFrame, out_dir: Path) -> None:
 
 
 def date_drift(table: pd.DataFrame, feats: list[str], out_dir: Path) -> None:
+    """Feature medians by dataset and study year (placeholder dates excluded)."""
     keep = table[~table["study_date_is_jan1"].fillna(True)]
     drift = keep.groupby(["dataset", "study_year"])[feats].median()
     drift.insert(0, "n", keep.groupby(["dataset", "study_year"]).size())

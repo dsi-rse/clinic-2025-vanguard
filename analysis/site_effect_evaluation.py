@@ -1,4 +1,4 @@
-"""Judge a pCR model against the site structure of a multi-dataset cohort.
+r"""Judge a pCR model against the site structure of a multi-dataset cohort.
 
 A pooled cross-validated AUROC on a cohort assembled from several datasets
 can come from two very different places: the imaging features, or the fact
@@ -58,6 +58,7 @@ N_BOOT = 5000
 BOOT_SEED = 0
 LODO_SEEDS = (42, 142, 242)
 NON_FEATURE_COLUMNS = {"case_id", "dataset", "fold", "pcr"}
+PAIRED_ARM_COUNT = 2
 
 
 def _stratified_unit_bootstrap(
@@ -118,6 +119,7 @@ def prevalence_baseline(frame: pd.DataFrame) -> np.ndarray:
 
 
 def per_dataset_auroc(frame: pd.DataFrame, prob: np.ndarray) -> pd.DataFrame:
+    """AUROC per dataset; single-class datasets are listed with ``auroc`` None."""
     rows = []
     for dataset, group in frame.assign(_prob=prob).groupby("dataset"):
         n_pos = int(group["pcr"].sum())
@@ -134,6 +136,7 @@ def per_dataset_auroc(frame: pd.DataFrame, prob: np.ndarray) -> pd.DataFrame:
 
 
 def size_weighted_within(per_dataset: pd.DataFrame) -> dict[str, Any]:
+    """Size-weighted mean of the per-dataset AUROCs (between-dataset structure removed)."""
     scored = per_dataset.dropna(subset=["auroc"])
     if scored.empty:
         return {"auroc": None, "n": 0}
@@ -205,6 +208,7 @@ def evaluate_arm(
     case_filter: pd.Series | None,
     lodo_model: str,
 ) -> tuple[dict[str, Any], pd.DataFrame, pd.DataFrame]:
+    """Evaluate one arm on one subset: pooled OOF, baseline, per-dataset, LODO."""
     oof = pd.read_csv(arm_dir / "oof_predictions.csv")
     frame = oof[["case_id", model_column]].merge(labels, on="case_id", how="inner")
     if len(frame) != len(oof):
@@ -342,7 +346,7 @@ def main() -> None:
             )
 
     contrasts = []
-    if len(arms) == 2:
+    if len(arms) == PAIRED_ARM_COUNT:
         (name_a, dir_a), (name_b, dir_b) = arms
         oof_a = pd.read_csv(Path(dir_a) / "oof_predictions.csv")
         oof_b = pd.read_csv(Path(dir_b) / "oof_predictions.csv")
