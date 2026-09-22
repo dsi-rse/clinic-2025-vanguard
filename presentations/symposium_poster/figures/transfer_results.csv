@@ -1,7 +1,0 @@
-kind,label,architecture,initialization,estimate,ci_low,ci_high
-auc,Graph-free — random start,no message passing,random start,0.4695340502,0.3708981006,0.5775786749
-auc,Graph-free — forecast pretrained,no message passing,forecast pretrained,0.5035842294,0.4010725304,0.6145386107
-auc,GNN — random start,message passing,random start,0.4336917563,0.3319205586,0.5370198984
-auc,GNN — forecast pretrained,message passing,forecast pretrained,0.5828853047,0.4831634049,0.6865396445
-delta,Graph-free,no message passing,forecast pretrained,0.0340501792,-0.0494399439,0.1201927705
-delta,GNN,message passing,forecast pretrained,0.1491935484,0.0461046215,0.2547083549
