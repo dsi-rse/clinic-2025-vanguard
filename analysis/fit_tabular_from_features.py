@@ -41,6 +41,16 @@ def main() -> None:
     parser.add_argument("--features", type=Path, required=True)
     parser.add_argument("--labels", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
+    parser.add_argument(
+        "--exclude-dataset",
+        action="append",
+        default=[],
+        help=(
+            "drop every case of this dataset before fitting (repeatable). The fold "
+            "column is left as assigned, so the remaining cases keep the same "
+            "train/test partition as the full-cohort run and the two are comparable."
+        ),
+    )
     args = parser.parse_args()
     args.out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -51,6 +61,13 @@ def main() -> None:
     table = features.merge(labels, on="case_id", how="inner", validate="one_to_one")
     if len(table) != len(features):
         raise ValueError(f"{len(features) - len(table)} feature rows have no label row")
+    if args.exclude_dataset:
+        unknown = set(args.exclude_dataset) - set(table["dataset"])
+        if unknown:
+            raise ValueError(f"--exclude-dataset names no cases: {sorted(unknown)}")
+        keep = ~table["dataset"].isin(args.exclude_dataset)
+        print(f"excluding {int((~keep).sum())} cases from {args.exclude_dataset}")
+        table = table.loc[keep].reset_index(drop=True)
     feature_cols = [c for c in features.columns if c not in NON_FEATURE_COLUMNS]
     y = table["pcr"].to_numpy(dtype=int)
 
@@ -82,7 +99,12 @@ def main() -> None:
         print(f"  {model_name:20s} AUC={auc:.3f}  95% CI [{lo:.3f}, {hi:.3f}]")
     (args.out_dir / "tabular_baseline_results.json").write_text(
         json.dumps(
-            {"per_fold": [], "pooled_oof": pooled, "features": str(args.features)},
+            {
+                "per_fold": [],
+                "pooled_oof": pooled,
+                "features": str(args.features),
+                "excluded_datasets": args.exclude_dataset,
+            },
             indent=2,
         )
     )

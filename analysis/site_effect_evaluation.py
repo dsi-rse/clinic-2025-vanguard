@@ -207,14 +207,14 @@ def evaluate_arm(
     subset_label: str,
     case_filter: pd.Series | None,
     lodo_model: str,
+    excluded_datasets: list[str],
 ) -> tuple[dict[str, Any], pd.DataFrame, pd.DataFrame]:
     """Evaluate one arm on one subset: pooled OOF, baseline, per-dataset, LODO."""
     oof = pd.read_csv(arm_dir / "oof_predictions.csv")
     frame = oof[["case_id", model_column]].merge(labels, on="case_id", how="inner")
-    if len(frame) != len(oof):
-        raise ValueError(
-            f"{name}: {len(oof) - len(frame)} OOF cases missing from the labels file"
-        )
+    dropped = len(oof) - len(frame)
+    if dropped and not excluded_datasets:
+        raise ValueError(f"{name}: {dropped} OOF cases missing from the labels file")
     if case_filter is not None:
         frame = frame[frame["case_id"].isin(case_filter)].reset_index(drop=True)
     y = frame["pcr"].to_numpy(dtype=int)
@@ -295,6 +295,12 @@ def main() -> None:
     parser.add_argument("--arm", action="append", required=True, metavar="NAME=DIR")
     parser.add_argument("--labels", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
+    parser.add_argument(
+        "--exclude-dataset",
+        action="append",
+        default=[],
+        help="drop every case of this dataset before evaluating (repeatable)",
+    )
     parser.add_argument("--model-column", default="oof_prob_elastic_net")
     parser.add_argument(
         "--lodo-model",
@@ -310,6 +316,11 @@ def main() -> None:
         if "patient_group_key" in labels
         else labels["case_id"]
     )
+    if args.exclude_dataset:
+        unknown = set(args.exclude_dataset) - set(labels["dataset"])
+        if unknown:
+            raise ValueError(f"--exclude-dataset names no cases: {sorted(unknown)}")
+        labels = labels.loc[~labels["dataset"].isin(args.exclude_dataset)]
     label_cols = ["case_id", "dataset", "pcr", "unit"]
     if "pcr_label_is_provisional" in labels:
         label_cols.append("pcr_label_is_provisional")
@@ -332,6 +343,7 @@ def main() -> None:
                 subset_label=subset_label,
                 case_filter=case_filter,
                 lodo_model=args.lodo_model,
+                excluded_datasets=args.exclude_dataset,
             )
             summaries.append(summary)
             per_ds_tables.append(per_ds)
@@ -393,6 +405,7 @@ def main() -> None:
                 },
                 "lodo_seeds": list(LODO_SEEDS),
                 "lodo_model": args.lodo_model,
+                "excluded_datasets": args.exclude_dataset,
                 "arms": summaries,
                 "paired_contrasts": contrasts,
             },
