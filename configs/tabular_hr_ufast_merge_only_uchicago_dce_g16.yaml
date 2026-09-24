@@ -1,0 +1,43 @@
+# uchicago_dce_g16 cohort (Anna's canonical manifest, generation 16), hr_ufast_merge_only arm.
+#
+# Every arm reads the same labels.csv (patient-grouped, pcr x dataset stratified
+# folds minted by scripts/build_uchicago_dce_case_manifest.py) and a per-arm
+# symlink tree from analysis/build_skeleton_arm_tree.py over ONE pipeline output
+# root, so the arms are paired by construction.
+experiment_setup:
+  name: "tabular_hr_ufast_merge_only_uchicago_dce_g16"
+  base_outdir: "./experiments"
+
+model_params:
+  device: "cpu"
+  n_splits: 5
+  random_state: 42
+  use_group_split: false
+  group_col: "site"
+  stratum_col: "dataset"
+  split_mode: "predefined"
+  split_col: "fold"
+  batch_size: 8
+  epochs: 25
+  hidden_dim: 32
+  num_layers: 2
+  dropout: 0.2
+  learning_rate: 0.001
+  gnn_node_mode: "voxel"
+  gnn_node_features: ["peak_time", "radius", "peak_enhancement", "washin_slope", "washout_slope", "auc_positive", "time_to_enhancement"]
+  weight_decay: 0.0
+  loss: "unweighted_bce"
+  lr_scheduler: "none"
+  max_grad_norm: 0.0
+  early_stopping_patience: 0
+  restore_best_epoch: false
+
+data_paths:
+  gnn_centerline_root: "/gpfs/data/karczmar-lab/workspaces/saritbose/uchicago_dce_g16/arm_trees/hr_ufast_merge_only"
+  gnn_dce_root: "/gpfs/data/karczmar-lab/workspaces/saritbose/uchicago_dce_g16/preprocessing_out/dce"
+  gnn_labels_path: "/gpfs/data/karczmar-lab/workspaces/saritbose/uchicago_dce_g16/staging/labels.csv"
+  gnn_cache_dir: "/gpfs/data/karczmar-lab/workspaces/saritbose/uchicago_dce_g16/gnn_cache/hr_ufast_merge_only"
+  gnn_id_column: "case_id"
+  gnn_label_column: "pcr"
+  gnn_cases: null
+  gnn_dataset_include: null
